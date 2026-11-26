@@ -226,7 +226,7 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 
 <script>
 "use strict";
-const ITER=400000, DAY=864e5, EDIT=new URLSearchParams(location.search).has('edit'), BUILD='7';
+const ITER=400000, DAY=864e5, EDIT=new URLSearchParams(location.search).has('edit'), BUILD='8';
 document.body.classList.toggle('view',!EDIT);
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MON_G=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
@@ -537,7 +537,12 @@ function tryMove(i,s){
   if(ds.some(d=>busy.has(d)))return flash('Пересекается с другой частью');
   if(ds[0]<M.yA||ds[ds.length-1]>M.yB)return flash('Вне периода плана');
   change(()=>{p[0]=iso(s);if(p[3]&&p[0].slice(0,7)!==p[3])p[3]=p[0].slice(0,7)});
+  keepVisible(s);
 }
+// keep the part's first day visible between the sticky chips and the bottom panel
+function keepVisible(d){const c=document.querySelector(`[data-d="${d}"]`);if(!c)return;
+  const r=c.getBoundingClientRect(),bottom=innerHeight-$('selbar').offsetHeight-80;
+  if(r.top<70||r.bottom>bottom)scrollBy({top:r.top-Math.max(80,(bottom-r.height)/2),behavior:'smooth'})}
 function focusPart(i){SEL=i;renderCal();if(EDIT)renderChips();tab('cal')}
 $('months').addEventListener('click',e=>{
   const c=e.target.closest('[data-d]');if(!c)return;const d=+c.dataset.d;
@@ -553,7 +558,7 @@ $('selbar').addEventListener('click',e=>{
   if(a==='prev'||a==='next'||a==='m7'||a==='p7')tryMove(i,fromIso(p[0])+({prev:-1,next:1,m7:-7,p7:7})[a]);
   if(a==='minus'&&p[1]>1)change(()=>{p[1]--});
   if(a==='plus')change(()=>{p[1]++});
-  if(a==='fit')change(()=>{if(!p[3])p[3]=p[0].slice(0,7);fit(i)});
+  if(a==='fit'){change(()=>{if(!p[3])p[3]=p[0].slice(0,7);fit(i)});keepVisible(fromIso(p[0]))}
 });
 $('zoom').onclick=()=>{BIG=!BIG;try{localStorage.setItem('plan.big',BIG?'1':'0')}catch(_){}renderCal()};
 function shortRng(p){const ds=span(p),a=dt(ds[0]),b=dt(ds[ds.length-1]);return (a.getUTCMonth()===b.getUTCMonth()?a.getUTCDate():nice(ds[0]))+'–'+nice(ds[ds.length-1])}
