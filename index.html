@@ -40,6 +40,11 @@ label.f{display:block;font-size:13px;color:var(--text-2);margin:10px 0 4px}
 .hidden{display:none!important}
 body.view .edit-only{display:none!important}
 body:not(.view) .view-only{display:none!important}
+#coach{position:fixed;inset:0;z-index:50}
+#coach .spot{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.55);outline:2px solid #fff;transition:top .25s,left .25s,width .25s,height .25s;pointer-events:none}
+#coach .tip{position:fixed;left:12px;right:12px;max-width:440px;margin:0 auto;background:var(--surface);color:var(--text);border-radius:14px;padding:14px;font-size:16px;line-height:1.4}
+#coach .tip .n{font-size:12px;color:var(--muted);margin-bottom:4px}
+#coach .tip .row{justify-content:flex-end;margin-top:10px}
 /* lock */
 .lock{max-width:340px;margin:12vh auto 0;text-align:center}
 .lock input{font-size:28px;letter-spacing:.3em;text-align:center;margin:14px 0}
@@ -143,7 +148,7 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 </section>
 
 <section id="app" class="hidden">
-  <header class="head"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h1 id="title">План отпуска</h1><button class="sm view-only" id="toEdit" type="button">Изменить</button></div>
+  <header class="head"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h1 id="title">План отпуска</h1><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="sm icon" id="help" type="button" aria-label="Как пользоваться">?</button><button class="sm view-only" id="toEdit" type="button">Изменить</button></span></div>
   <p class="sub" id="forecast" style="margin:0"></p></header>
 
   <div data-pane="cal">
@@ -223,11 +228,14 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 </section>
 </main>
 <div class="selbar hidden" id="selbar" role="region" aria-label="Выбранная часть отпуска"></div>
+<div id="coach" class="hidden" role="dialog" aria-modal="true" aria-label="Как пользоваться"><div class="spot"></div>
+  <div class="tip"><div class="n" id="coachN"></div><div id="coachT"></div>
+  <div class="row"><button type="button" id="coachX">Закрыть</button><button type="button" class="primary" id="coachNext">Дальше</button></div></div></div>
 <nav class="tabs hidden" id="tabs" role="tablist" aria-label="Разделы"></nav>
 
 <script>
 "use strict";
-const ITER=400000, DAY=864e5, BUILD='9';
+const ITER=400000, DAY=864e5, BUILD='10';
 let EDIT=new URLSearchParams(location.search).has('edit');
 document.body.classList.toggle('view',!EDIT);
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
@@ -526,6 +534,43 @@ function enterEdit(){
   render();tab('cal');
 }
 $('toEdit').onclick=enterEdit;
+/* ---------- help: guided tour over the real UI ---------- */
+const firstSelCell=()=>{if(SEL===null&&S.p.length){SEL=0;renderCal();if(EDIT)renderChips();selbar()}return SEL!==null?document.querySelector(`[data-d="${span(S.p[SEL])[0]}"]`):null};
+const firstVacCell=()=>S.p.length?document.querySelector(`[data-d="${span(S.p[0])[0]}"]`):null;
+const STEPS_EDIT=[
+  {tab:'cal',el:()=>$('chips'),t:'Части отпуска. Нажмите на часть, чтобы выбрать её. «+ часть» — добавить новую.'},
+  {tab:'cal',el:firstSelCell,t:'Выбранная часть обведена рамкой. Нажмите на любой другой день — отпуск начнётся с него.'},
+  {tab:'cal',el:()=>{firstSelCell();return $('selbar').querySelector('.sa')},t:'−7 ◀ ▶ +7 — сдвиг на неделю или на день. Смотрите:',demo:true},
+  {tab:'cal',el:()=>$('selbar').querySelectorAll('.sa')[1],t:'Длина части и «Подобрать» — лучшее место в этом месяце: больше выходных и праздников подряд, без нежелательных дат.'},
+  {tab:'cal',el:()=>$('ideas').querySelector('button'),t:'Идеи на нераспределённые дни: короткие отпуска у праздников. Нажмите — часть добавится.'},
+  {tab:'cal',el:()=>document.querySelector('.legend'),t:'Синий — отпуск, красная черта — месячные, жёлтая рамка — лучше не в отпуске, подчёркнуто — праздник (не тратит дни отпуска).'},
+  {tab:'parts',el:()=>$('summary'),t:'Вкладка «Отпуск»: сколько дней осталось, правила и пересечения.'},
+  {tab:'link',el:()=>$('savebar'),t:'Вкладка «Ссылка»: «Сохранить» даст ссылку для просмотра (отправить) и для редактирования (себе). PIN сообщайте отдельно.'}];
+const STEPS_VIEW=[
+  {tab:'cal',el:()=>document.querySelector('.legend'),t:'Синий — отпуск, красная черта — месячные, жёлтая рамка — лучше не в отпуске, подчёркнуто — праздник.'},
+  {tab:'cal',el:firstVacCell,t:'Нажмите на отпуск — снизу появятся подробности: даты и сколько дней отдыха подряд.'},
+  {tab:'cal',el:()=>$('toEdit'),t:'«Изменить» включает редактор: отпуск можно двигать. Правки остаются у вас, пока вы не отправите новую ссылку.'},
+  {tab:'parts',el:()=>$('summary'),t:'Вкладка «Отпуск»: итоги и все части списком.'}];
+let CO=null;
+function coach(){const st=(EDIT?STEPS_EDIT:STEPS_VIEW);CO={st,i:-1,demo:null};$('coach').classList.remove('hidden');coachStep(1)}
+function coachEnd(){demoStop();CO=null;$('coach').classList.add('hidden');if(CUR!=='cal')tab('cal')}
+function coachStep(dir){
+  demoStop();let i=CO.i,el=null;
+  do{i+=dir;if(i<0||i>=CO.st.length)return coachEnd();const s=CO.st[i];if(CUR!==s.tab)tab(s.tab);el=s.el()}while(!el||!el.getClientRects().length);
+  CO.i=i;const s=CO.st[i];
+  if(getComputedStyle(el).position!=='fixed'&&!el.closest('.selbar,.tabs,.chips'))el.scrollIntoView({block:'center'});
+  setTimeout(()=>{const r=el.getBoundingClientRect(),sp=$('coach').querySelector('.spot'),tp=$('coach').querySelector('.tip'),pad=6;
+    Object.assign(sp.style,{top:r.top-pad+'px',left:r.left-pad+'px',width:r.width+2*pad+'px',height:r.height+2*pad+'px'});
+    $('coachN').textContent=`${i+1} из ${CO.st.length}`;$('coachT').textContent=s.t;$('coachNext').textContent=i===CO.st.length-1?'Готово':'Дальше';
+    if(r.top+r.height/2>innerHeight/2){tp.style.top='';tp.style.bottom=Math.max(12,innerHeight-r.top+pad+10)+'px'}else{tp.style.bottom='';tp.style.top=Math.min(innerHeight-180,r.bottom+pad+10)+'px'}
+    if(s.demo)demoRun();},30);
+}
+// demo: move the selected part a few days and back without touching saved state
+function demoRun(){const p=S.p[SEL];if(!p)return;const orig=p[0],seq=[1,2,3,2,1,0];let k=0;
+  CO.demo={orig,p,t:setInterval(()=>{p[0]=iso(fromIso(orig)+seq[k]);renderCal();selbar();if(++k>=seq.length)demoStop()},450)}}
+function demoStop(){if(!CO||!CO.demo)return;clearInterval(CO.demo.t);CO.demo.p[0]=CO.demo.orig;CO.demo=null;renderCal();selbar()}
+$('help').onclick=coach;$('coachNext').onclick=()=>coachStep(1);$('coachX').onclick=coachEnd;
+addEventListener('keydown',e=>{if(CO&&e.key==='Escape')coachEnd()});
 $('ver').textContent=(EDIT?'редактор':'просмотр')+' · версия '+BUILD;
 $('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
 function tab(k){document.querySelectorAll('[data-pane]').forEach(p=>p.classList.toggle('hidden',p.dataset.pane!==k));
