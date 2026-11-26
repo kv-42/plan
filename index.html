@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>План отпуска</title>
+<style>
+:root{
+  --bg:#f7f6f2;--surface:#fff;--surface-2:#efede7;--text:#1a1a19;--text-2:#4a4945;--muted:#6b6a65;--border:rgba(11,11,11,.12);
+  --vac:#2a78d6;--vac-text:#fff;--per:#e34948;--per-soft:#f2a9a8;--avoid:#c98500;
+  --ok:#0b7a0b;--warn:#a85a00;--bad:#c42f2f;--accent-bg:#1a1a19;--accent-text:#fff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121211;--surface:#1c1c1b;--surface-2:#272725;--text:#f0efec;--text-2:#c9c8be;--muted:#9a998f;--border:rgba(255,255,255,.12);
+  --vac:#3987e5;--vac-text:#fff;--per:#ef6b6b;--per-soft:#8a3a3a;--avoid:#eda100;
+  --ok:#4cc24c;--warn:#f0a23a;--bad:#ef6b6b;--accent-bg:#f0efec;--accent-text:#121211;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums}
+.wrap{max-width:860px;margin:0 auto;padding:18px 16px calc(40px + env(safe-area-inset-bottom))}
+h1{font-size:22px;font-weight:650;margin:0 0 2px}
+h2{font-size:16px;font-weight:650;margin:22px 0 8px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px}
+button,input,textarea{font:inherit;color:inherit}
+button{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer;-webkit-tap-highlight-color:transparent}
+button.primary{background:var(--accent-bg);color:var(--accent-text);border-color:var(--accent-bg)}
+button.sm{min-height:34px;padding:0 10px;font-size:14px}
+button.icon{min-width:40px;padding:0}
+input,textarea{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 10px;min-height:40px;width:100%}
+input[type=number]{width:76px}
+input[type=date]{width:auto;min-width:150px}
+textarea{min-height:120px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}
+label.f{display:block;font-size:13px;color:var(--text-2);margin:10px 0 4px}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.hidden{display:none!important}
+/* lock */
+.lock{max-width:340px;margin:12vh auto 0;text-align:center}
+.lock input{font-size:28px;letter-spacing:.3em;text-align:center;margin:14px 0}
+.err{color:var(--bad);font-size:14px;min-height:20px}
+/* summary */
+.sum{display:grid;gap:6px;font-size:14px}
+.st{display:flex;gap:8px;align-items:flex-start}
+.st i{font-style:normal;font-weight:700;width:16px;flex:none;text-align:center}
+.st.info i{color:var(--per)}.st.ok i{color:var(--ok)}.st.warn i{color:var(--warn)}.st.bad i{color:var(--bad)}
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--text-2);margin:10px 0 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.lg{width:16px;height:16px;border-radius:4px;position:relative;display:inline-block}
+/* parts */
+.parts{display:grid;gap:10px}
+.part .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2)}
+.part .rng{font-weight:600}
+.part .x{margin-left:auto}
+.prow{flex-wrap:nowrap;gap:6px}.prow input[type=date]{flex:1;min-width:0;width:auto}.prow input[type=number]{width:58px;flex:none}
+.issues{font-size:13px;margin-top:6px;color:var(--text-2)}
+.strip{display:flex;gap:1px;margin-top:8px;height:14px}
+.strip i{flex:1;min-width:2px;background:var(--vac);border-radius:2px;position:relative}
+.strip i.p::after,.strip i.ps::after{content:'';position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--per);border-radius:0 0 2px 2px}
+.strip i.ps::after{background:var(--per-soft)}
+.strip i.a{box-shadow:inset 0 0 0 2px var(--avoid)}
+.strip i.h{opacity:.45}
+.issues b{color:var(--bad);font-weight:600}
+.issues .good{color:var(--ok)}
+.alts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.alts button{font-size:13px;min-height:32px;padding:0 10px}
+/* calendar */
+.months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}
+@media (min-width:640px){.months{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:820px){.months{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mname{font-size:13px;font-weight:600;margin:0 0 4px 2px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.wd{font-size:10px;color:var(--muted);text-align:center}
+.d{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:11px;border-radius:5px;color:var(--text)}
+.d.we{color:var(--muted)}
+.d.v{background:var(--vac);color:var(--vac-text);font-weight:600}
+.d.a{box-shadow:inset 0 0 0 2px var(--avoid)}
+.d.h{font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.pb{position:absolute;left:2px;right:2px;bottom:1px;height:4px;border-radius:2px;background:var(--per);box-shadow:0 0 0 1px var(--surface)}
+.pb.s{background:var(--per-soft)}
+.lg .pb{bottom:2px}
+details.card>summary{cursor:pointer;font-weight:600;list-style:none;min-height:32px;display:flex;align-items:center}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::before{content:'▸';margin-right:8px;color:var(--muted)}
+details.card[open]>summary::before{content:'▾'}
+.savebar{position:sticky;bottom:0;margin-top:16px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.savebar input.pin{width:110px;letter-spacing:.2em;text-align:center}
+.link{font-size:12px;font-family:ui-monospace,monospace;margin-top:8px}
+.note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<section id="lock" class="lock hidden">
+  <h1>План отпуска</h1>
+  <p class="sub">Данные зашифрованы в ссылке. Введите PIN.</p>
+  <form id="lockForm" autocomplete="off">
+    <input id="pinIn" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN" maxlength="32">
+    <div class="err" id="lockErr" role="alert"></div>
+    <button class="primary" type="submit" id="lockBtn" style="width:100%">Открыть</button>
+  </form>
+  <p class="hint" style="margin-top:18px"><a href="#" id="newLink" style="color:inherit">Создать новую пустую ссылку</a></p>
+</section>
+
+<section id="app" class="hidden">
+  <h1 id="title">План отпуска</h1>
+  <p class="sub" id="forecast"></p>
+
+  <div class="card sum" id="summary"></div>
+
+  <h2>Части отпуска</h2>
+  <div class="parts" id="parts"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="sm" id="addC">+ из переноса</button>
+    <button class="sm" id="addY">+ из нового года</button>
+  </div>
+
+  <h2 id="calTitle">Календарь</h2>
+  <div class="legend">
+    <span><i class="lg" style="background:var(--vac)"></i>отпуск</span>
+    <span><i class="lg" style="background:var(--surface-2)"><i class="pb"></i></i>месячные, вероятно</span>
+    <span><i class="lg" style="background:var(--surface-2)"><i class="pb s"></i></i>возможно</span>
+    <span><i class="lg" style="box-shadow:inset 0 0 0 2px var(--avoid)"></i>нежелательно</span>
+    <span><b style="text-decoration:underline">15</b> праздник, не входит в дни отпуска</span>
+  </div>
+  <div class="months" id="months"></div>
+
+  <h2>Данные и правила</h2>
+  <details class="card" id="editor">
+    <summary>Изменить</summary>
+    <div class="row">
+      <div><label class="f" for="eFrom">План с</label><input id="eFrom" type="month"></div>
+      <div><label class="f" for="eTo">по</label><input id="eTo" type="month"></div>
+      <div><label class="f" for="eFr">Запас прогноза, ± дн.</label><input id="eFr" type="number" min="0" max="10"></div>
+    </div>
+    <div class="row">
+      <div><label class="f" for="eCarry">Перенос, дн.</label><input id="eCarry" type="number" min="0" max="200"></div>
+      <div><label class="f" for="eYearDays">На год, дн.</label><input id="eYearDays" type="number" min="0" max="200"></div>
+      <div><label class="f" for="eMin">Одна часть не короче</label><input id="eMin" type="number" min="0" max="100"></div>
+    </div>
+    <label class="row" style="margin-top:10px;font-size:14px"><input id="eSplit" type="checkbox" style="width:auto;min-height:0"> перенос можно делить на части</label>
+    <label class="f" for="eCycles">Месячные: дата начала и сколько дней, по строке (история или прогноз Flo; дальше продлится по среднему циклу)</label>
+    <textarea id="eCycles" spellcheck="false" placeholder="12.10.2026 5&#10;09.11.2026 4"></textarea>
+    <label class="f" for="eHol">Праздники (не входят в дни отпуска)</label>
+    <input id="eHol" spellcheck="false">
+    <label class="f" for="eAv">Нежелательные даты</label>
+    <input id="eAv" spellcheck="false">
+    <p class="hint">Формат: <code>1.05</code>, <code>1.05-3.05</code>, <code>вс3.09</code> (3-е воскресенье сентября), <code>12.06.2027</code></p>
+    <div class="err" id="edErr"></div>
+    <button class="primary" id="apply" style="margin-top:6px">Применить</button>
+  </details>
+
+  <div class="savebar hidden" id="savebar">
+    <div class="row">
+      <span style="font-size:14px;flex:1;min-width:140px" id="saveMsg">Сохранить в новую ссылку</span>
+      <input class="pin" id="pinSave" type="password" inputmode="numeric" placeholder="PIN" aria-label="PIN для ссылки" autocomplete="off">
+      <button class="primary" id="save">Скопировать ссылку</button>
+    </div>
+    <input class="link hidden" id="linkOut" readonly aria-label="Новая ссылка">
+  </div>
+
+  <p class="note">Дни отпуска считаются календарными, праздники из списка не входят и продлевают отпуск. Прогноз берётся из дат в «Данных» (например, из Flo), дальше продлевается по среднему циклу. Ничего не хранится на сервере: всё в ссылке, расшифровка в браузере.</p>
+</section>
+</main>
+
+<script>
+"use strict";
+const ITER=400000, DAY=864e5;
+const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MON_G=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const WDN={пн:1,вт:2,ср:3,чт:4,пт:5,сб:6,вс:0};
+const $=id=>document.getElementById(id);
+const enc=new TextEncoder(),dec=new TextDecoder();
+
+/* ---------- dates: integer day numbers (UTC) ---------- */
+const dn=(y,m,d)=>Math.round(Date.UTC(y,m-1,d)/DAY);
+const dt=n=>new Date(n*DAY);
+const iso=n=>dt(n).toISOString().slice(0,10);
+const fromIso=s=>{const [y,m,d]=s.split('-').map(Number);return dn(y,m,d)};
+const nice=n=>{const t=dt(n);return t.getUTCDate()+' '+MON_G[t.getUTCMonth()]};
+const niceY=n=>nice(n)+' '+dt(n).getUTCFullYear();
+const range=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
+
+function parseSpecs(str,years){
+  const out=new Set(),bad=new Set();
+  for(const year of [].concat(years))for(const raw of (str||'').split(/[,;\s]+/).filter(Boolean)){
+    let m;
+    if((m=raw.match(/^(пн|вт|ср|чт|пт|сб|вс)(\d)\.(\d{1,2})$/i))){
+      const wd=WDN[m[1].toLowerCase()],k=+m[2],mo=+m[3];let d=dn(year,mo,1),c=0;
+      while(dt(d).getUTCMonth()===mo-1){if(dt(d).getUTCDay()===wd&&++c===k){out.add(d);break}d++}
+    }else if((m=raw.match(/^(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?(?:-(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?)?$/))){
+      const a=dn(m[3]?+m[3]:year,+m[2],+m[1]);
+      const b=m[4]?dn(m[6]?+m[6]:(m[3]?+m[3]:year),+m[5],+m[4]):a;
+      if(b>=a&&b-a<400)range(a,b).forEach(x=>out.add(x));else bad.add(raw);
+    }else bad.add(raw);
+  }
+  return {days:out,bad:[...bad]};
+}
+
+/* ---------- crypto: PBKDF2 -> AES-GCM, payload in URL hash ---------- */
+const b64u=b=>{let s='';b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const ub64u=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+async function keyFor(pin,salt){
+  const base=await crypto.subtle.importKey('raw',enc.encode(pin),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function seal(obj,pin){
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},await keyFor(pin,salt),enc.encode(JSON.stringify(obj))));
+  const all=new Uint8Array(28+ct.length);all.set(salt);all.set(iv,16);all.set(ct,28);
+  return '1'+b64u(all);
+}
+async function open_(hash,pin){
+  if(hash[0]!=='1')throw new Error('format');
+  const all=ub64u(hash.slice(1));
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:all.slice(16,28)},await keyFor(pin,all.slice(0,16)),all.slice(28));
+  return JSON.parse(dec.decode(pt));
+}
+
+/* ---------- state ---------- */
+let S=null,PIN='',dirty=false,M=null;
+function blank(){const t=new Date(),y=t.getFullYear(),m=t.getMonth()+2;return {r:[m>12?`${y+1}-01`:`${y}-${String(m).padStart(2,'0')}`,`${y+1}-12`],c:[],f:0,v:{carry:0,split:1,year:24,min:14},p:[],h:'',a:''}}
+const ym=s=>s.split('-').map(Number);
+function rng(){const [fy,fm]=ym(S.r[0]),[ty,tm]=ym(S.r[1]);return {fy,fm,ty,tm,a:dn(fy,fm,1),b:dn(ty,tm+1,1)-1,years:range(fy,ty)}}
+const rngTxt=()=>{const r=rng();return `${MON_G[r.fm-1]} ${r.fy} – ${MON_G[r.tm-1]} ${r.ty}`};
+
+/* ---------- model ---------- */
+function model(){
+  const r=rng(),y=r.ty,yA=r.a,yB=r.b;
+  const hol=parseSpecs(S.h,r.years).days, av=parseSpecs(S.a,r.years).days;
+  // cycles
+  const cyc=S.c.map(s=>{const [d,l]=s.split(':');return {s:fromIso(d),l:+l||5}}).sort((a,b)=>a.s-b.s);
+  const lens=[];for(let i=1;i<cyc.length;i++)lens.push(cyc[i].s-cyc[i-1].s);
+  const rec=lens.slice(-6),avgL=rec.length?rec.reduce((a,b)=>a+b,0)/rec.length:null;
+  const sdL=lens.length>1?Math.sqrt(lens.slice(-12).reduce((a,b,_,r)=>a+(b-r.reduce((x,z)=>x+z,0)/r.length)**2,0)/(Math.min(12,lens.length)-1)):null;
+  const pl=cyc.slice(-6).map(c=>c.l),avgP=pl.length?Math.round(pl.reduce((a,b)=>a+b,0)/pl.length):5;
+  const likely=new Set(),maybe=new Set(),starts=[],today=dn(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate());
+  const mark=(s,l)=>{range(s,s+l-1).forEach(d=>likely.add(d));if(s>=today)for(let j=1;j<=S.f;j++){maybe.add(s-j);maybe.add(s+l-1+j)}};
+  cyc.forEach(c=>{mark(c.s,c.l);starts.push(c.s)});
+  if(cyc.length&&avgL&&avgL>=15&&avgL<=60){
+    const last=cyc[cyc.length-1].s;
+    for(let k=1;;k++){const s=Math.round(last+k*avgL);if(s>yB+40)break;starts.push(s);mark(s,avgP)}
+  }
+  likely.forEach(d=>maybe.delete(d));
+  return {y,yA,yB,hol,av,cyc,avgL,sdL,avgP,likely,maybe,starts:starts.filter(s=>s>=today)};
+}
+function span(p){ // calendar days; holidays are not counted and extend the part
+  const s=fromIso(p[0]);let d=s,c=0;const days=[];
+  while(c<p[1]&&days.length<400){days.push(d);if(!M.hol.has(d))c++;d++}
+  return days;
+}
+function hits(days){
+  let l=0,m=0;const a=[];
+  for(const d of days){if(M.likely.has(d))l++;else if(M.maybe.has(d))m++;if(M.av.has(d))a.push(d)}
+  return {l,m,a,score:l*3+m+a.length*4};
+}
+function others(i){const s=new Set();S.p.forEach((p,j)=>{if(j!==i)span(p).forEach(d=>s.add(d))});return s}
+function alts(i){
+  const p=S.p[i],cur=hits(span(p)).score,busy=others(i),res=[];
+  if(cur===0)return res;
+  for(let off=-30;off<=30;off++){if(!off)continue;
+    const s=fromIso(p[0])+off,q=[iso(s),p[1],p[2]],ds=span(q);
+    if(ds[0]<M.yA||ds[ds.length-1]>M.yB||ds.some(d=>busy.has(d)))continue;
+    const h=hits(ds);if(h.score<cur)res.push({off,s,h});}
+  res.sort((a,b)=>a.h.score-b.h.score||Math.abs(a.off)-Math.abs(b.off));
+  const pick=[];for(const r of res){if(pick.every(x=>Math.abs(x.off-r.off)>3))pick.push(r);if(pick.length===3)break}
+  return pick;
+}
+
+/* ---------- render ---------- */
+function render(){
+  M=model();
+  $('title').textContent='План отпуска';
+  $('calTitle').textContent='Календарь: '+rngTxt();
+  const f=M.avgL?`Цикл ≈ ${+M.avgL.toFixed(1)} дн.${M.sdL>0.05?' (±'+M.sdL.toFixed(1).replace('.',',')+')':''}, месячные ≈ ${M.avgP} дн., запас ±${S.f}.${M.starts.length?' Ближайшие: '+M.starts.slice(0,2).map(niceY).join(', '):''}`.replace(/(\d)\.(\d)/g,'$1,$2'):'Нет дат месячных — прогноза нет. Добавьте даты в «Данные».';
+  $('forecast').textContent=f;
+  renderSummary();renderParts();renderCal();fillEditor();
+  $('savebar').classList.toggle('hidden',!dirty&&$('linkOut').classList.contains('hidden'));
+  if(dirty)$('saveMsg').textContent='Есть изменения — сохраните в новую ссылку';
+}
+function st(kind,txt){return `<div class="st ${kind}"><i>${kind==='ok'?'✓':kind==='warn'?'!':kind==='info'?'●':'×'}</i><span>${txt}</span></div>`}
+function runs(days,set){const out=[];let s=null,p=null;for(const d of days){if(set.has(d)){if(s===null)s=d;p=d}else if(s!==null){out.push([s,p]);s=null}}if(s!==null)out.push([s,p]);
+  return out.map(([a,b])=>a===b?nice(a):(dt(a).getUTCMonth()===dt(b).getUTCMonth()?dt(a).getUTCDate():nice(a))+'–'+nice(b)).join(', ')}
+function renderSummary(){
+  const v=S.v,pc=S.p.filter(p=>p[2]==='c'),py=S.p.filter(p=>p[2]==='y');
+  const sc=pc.reduce((a,p)=>a+p[1],0),sy=py.reduce((a,p)=>a+p[1],0);
+  let h='';
+  if(v.carry>0){
+    const okSplit=v.split||(pc.length<=1);
+    const k=sc===v.carry&&okSplit?'ok':sc>v.carry||!okSplit?'bad':'warn';
+    h+=st(k,`Перенос: ${sc} из ${v.carry} дн.${!v.split?' — одним куском':''}${!okSplit?' (разбит, так нельзя)':''}${sc<v.carry?' — осталось '+(v.carry-sc):''}`);
+  }
+  if(v.year>0){
+    const k=sy>v.year?'bad':sy===v.year?'ok':'warn';
+    h+=st(k,`Новый год (${M.y}): ${sy} из ${v.year} дн.${sy<v.year?' — осталось '+(v.year-sy):''}${sy>v.year?' — перебор '+(sy-v.year):''}`);
+    if(v.min>0&&py.length){const mx=Math.max(...py.map(p=>p[1]));h+=st(mx>=v.min?'ok':'bad',mx>=v.min?`Есть часть не короче ${v.min} дн.`:`Нужна хотя бы одна часть от ${v.min} дн. (сейчас самая длинная ${mx})`)}
+  }
+  const all=[];S.p.forEach(p=>all.push(...span(p)));
+  if(new Set(all).size<all.length)h+=st('bad','Части отпуска пересекаются');
+  const out=all.some(d=>d<M.yA||d>M.yB);if(out)h+=st('warn',`Есть дни вне плана (${rngTxt()})`);
+  const t=hits([...new Set(all)]);
+  if(S.p.length)h+=st(t.l||t.m?'info':'ok',t.l||t.m?`Месячные в отпуске: ${t.l} дн.${t.m?' (+'+t.m+' возможно)':''}`:'Месячные на отпуск не попадают');
+  if(S.p.length&&t.a.length)h+=st('warn','Нежелательные даты в отпуске: '+t.a.map(nice).join(', '));
+  $('summary').innerHTML=h||st('warn','Добавьте части отпуска');
+}
+function renderParts(){
+  const box=$('parts');
+  box.innerHTML=S.p.map((p,i)=>{
+    const ds=span(p),h=hits(ds),a=alts(i),ext=ds.length-p[1];
+    const lock=p[2]==='c'&&!S.v.split;
+    let iss=[];
+    if(h.l)iss.push(`месячные: ${runs(ds,M.likely)}`);
+    if(h.m)iss.push(`возможно: ${runs(ds,M.maybe)}`);
+    if(h.a.length)iss.push(`нежелательно: ${h.a.map(nice).join(', ')}`);
+    const strip=ds.map(d=>`<i class="${M.likely.has(d)?'p':M.maybe.has(d)?'ps':''}${M.av.has(d)?' a':''}${M.hol.has(d)?' h':''}"></i>`).join('');
+    return `<div class="card part" data-i="${i}">
+      <div class="top"><span class="tag">${p[2]==='c'?'перенос':'новый год'}</span>
+        <span class="rng">${nice(ds[0])} – ${nice(ds[ds.length-1])}</span>
+        <span style="font-size:13px;color:var(--muted)">${p[1]} дн.${ext?' + '+ext+' празд.':''}</span>
+        <button class="sm icon x" data-act="del" aria-label="Удалить часть">×</button></div>
+      <div class="row prow">
+        <button class="sm icon" data-act="prev" aria-label="На день раньше">◀</button>
+        <input type="date" data-act="date" value="${p[0]}" aria-label="Начало">
+        <button class="sm icon" data-act="next" aria-label="На день позже">▶</button>
+        <input type="number" data-act="days" min="1" max="200" value="${p[1]}" ${lock?'disabled title="Перенос одним куском"':''} aria-label="Дней отпуска"></div>
+      <div class="strip" aria-hidden="true">${strip}</div>
+      <div class="issues">${iss.length?iss.join(' · '):'<span class="good">✓ без пересечений</span>'}</div>
+      ${a.length?`<div class="alts"><span class="hint" style="width:100%;margin:0">Сдвинуть без пересечений:</span>${a.map(x=>`<button data-act="go" data-s="${iso(x.s)}">${nice(x.s)} (${x.off>0?'+':'−'}${Math.abs(x.off)}): ${x.h.l?x.h.l+' вер.':''}${x.h.m?' '+x.h.m+' возм.':''}${!x.h.l&&!x.h.m?'чисто':''}${x.h.a.length?' · '+x.h.a.length+' нежел.':''}</button>`).join('')}</div>`:''}
+    </div>`}).join('')||'<p class="hint">Пока нет частей.</p>';
+}
+function renderCal(){
+  const vac=new Set();S.p.forEach(p=>span(p).forEach(d=>vac.add(d)));
+  let h='';
+  const r=rng();
+  for(let k=0,yy=r.fy,m=r.fm;k<36&&(yy<r.ty||(yy===r.ty&&m<=r.tm));k++,m=m===12?(yy++,1):m+1){
+    const a=dn(yy,m,1),off=(dt(a).getUTCDay()+6)%7;let c='';
+    ['пн','вт','ср','чт','пт','сб','вс'].forEach(w=>c+=`<div class="wd">${w}</div>`);
+    for(let i=0;i<off;i++)c+='<div></div>';
+    for(let d=a;dt(d).getUTCMonth()===m-1;d++){
+      const wd=dt(d).getUTCDay(),cls=['d'];
+      if(wd===0||wd===6)cls.push('we');if(vac.has(d))cls.push('v');if(M.av.has(d))cls.push('a');if(M.hol.has(d))cls.push('h');
+      const bar=M.likely.has(d)?'<i class="pb"></i>':M.maybe.has(d)?'<i class="pb s"></i>':'';
+      c+=`<div class="${cls.join(' ')}">${dt(d).getUTCDate()}${bar}</div>`;
+    }
+    h+=`<div><div class="mname">${MONTHS[m-1]}${m===1||k===0?' '+yy:''}</div><div class="cal">${c}</div></div>`;
+  }
+  $('months').innerHTML=h;
+}
+function fillEditor(){
+  if($('editor').contains(document.activeElement))return;
+  $('eFrom').value=S.r[0];$('eTo').value=S.r[1];$('eFr').value=S.f;$('eCarry').value=S.v.carry;$('eYearDays').value=S.v.year;$('eMin').value=S.v.min;$('eSplit').checked=!!S.v.split;
+  $('eCycles').value=S.c.map(s=>{const [d,l]=s.split(':');const [y,m,dd]=d.split('-');return `${dd}.${m}.${y} ${l}`}).join('\n');
+  $('eHol').value=S.h;$('eAv').value=S.a;
+}
+
+/* ---------- events ---------- */
+function change(fn){fn();dirty=true;$('linkOut').classList.add('hidden');render()}
+$('parts').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const i=+b.closest('.part').dataset.i,act=b.dataset.act;
+  if(act==='del')change(()=>S.p.splice(i,1));
+  if(act==='prev'||act==='next')change(()=>{S.p[i][0]=iso(fromIso(S.p[i][0])+(act==='next'?1:-1))});
+  if(act==='go')change(()=>{S.p[i][0]=b.dataset.s});
+});
+$('parts').addEventListener('change',e=>{
+  const t=e.target,i=+t.closest('.part').dataset.i;
+  if(t.dataset.act==='date'&&t.value)change(()=>{S.p[i][0]=t.value});
+  if(t.dataset.act==='days'&&+t.value>0)change(()=>{S.p[i][1]=Math.round(+t.value)});
+});
+function addPart(src){
+  change(()=>{
+    const used=new Set();S.p.forEach(p=>span(p).forEach(d=>used.add(d)));
+    const sc=S.p.filter(p=>p[2]==='c').reduce((a,p)=>a+p[1],0),sy=S.p.filter(p=>p[2]==='y').reduce((a,p)=>a+p[1],0);
+    let n=src==='c'?Math.max(1,S.v.carry-sc):Math.max(1,Math.min(14,S.v.year-sy));
+    let s=Math.max(M.yA,dn(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate())+7);while(range(s,s+n+5).some(d=>used.has(d))&&s<M.yB)s+=7;
+    S.p.push([iso(s),n,src]);S.p.sort((a,b)=>a[0]<b[0]?-1:1);
+  });
+}
+$('addC').onclick=()=>addPart('c');$('addY').onclick=()=>addPart('y');
+$('apply').onclick=()=>{
+  const r0=$('eFrom').value,r1=$('eTo').value,err=[];
+  if(!/^\d{4}-\d{2}$/.test(r0)||!/^\d{4}-\d{2}$/.test(r1)||r1<r0)err.push('период');
+  const yrs=err.length?[2000]:range(ym(r0)[0],ym(r1)[0]);
+  const cyc=[];
+  $('eCycles').value.split('\n').map(s=>s.trim()).filter(Boolean).forEach(line=>{
+    const m=line.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2})$/)||line.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2})$/);
+    if(!m){err.push('строка «'+line+'»');return}
+    const d=m[1].length===4?dn(+m[1],+m[2],+m[3]):dn(+m[3],+m[2],+m[1]);cyc.push(iso(d)+':'+(+m[4]));
+  });
+  const bh=parseSpecs($('eHol').value,yrs).bad,ba=parseSpecs($('eAv').value,yrs).bad;
+  if(bh.length)err.push('праздники: '+bh.join(' '));if(ba.length)err.push('даты: '+ba.join(' '));
+  $('edErr').textContent=err.length?'Не понял: '+err.join('; '):'';
+  if(err.length)return;
+  change(()=>{S.r=[r0,r1];S.f=Math.max(0,Math.min(10,+$('eFr').value||0));
+    S.v={carry:Math.max(0,+$('eCarry').value||0),split:$('eSplit').checked?1:0,year:Math.max(0,+$('eYearDays').value||0),min:Math.max(0,+$('eMin').value||0)};
+    S.c=cyc.sort();S.h=$('eHol').value.trim();S.a=$('eAv').value.trim();});
+  document.activeElement.blur();fillEditor();
+};
+$('save').onclick=async()=>{
+  const pin=$('pinSave').value.trim();
+  if(pin.length<4){$('saveMsg').textContent='PIN — минимум 4 символа';$('pinSave').focus();return}
+  $('save').disabled=true;$('saveMsg').textContent='Шифрую…';
+  try{
+    const h=await seal(S,pin);PIN=pin;history.replaceState(null,'','#'+h);
+    const url=location.href,out=$('linkOut');out.value=url;out.classList.remove('hidden');
+    let copied=false;try{await navigator.clipboard.writeText(url);copied=true}catch(_){}
+    if(!copied){out.focus();out.select()}
+    dirty=false;$('saveMsg').textContent=copied?'Ссылка скопирована ✓':'Скопируйте ссылку ниже';
+  }catch(e){$('saveMsg').textContent='Ошибка шифрования'}
+  $('save').disabled=false;
+};
+$('lockForm').onsubmit=async e=>{
+  e.preventDefault();const pin=$('pinIn').value.trim();if(!pin)return;
+  $('lockBtn').disabled=true;$('lockErr').textContent='Проверяю…';
+  try{S=await open_(location.hash.slice(1),pin);PIN=pin;$('pinSave').value=pin;show()}
+  catch(_){$('lockErr').textContent='Неверный PIN или битая ссылка';$('pinIn').select()}
+  $('lockBtn').disabled=false;
+};
+$('newLink').onclick=e=>{e.preventDefault();history.replaceState(null,'',location.pathname);S=blank();dirty=true;show();$('editor').open=true};
+addEventListener('hashchange',()=>location.reload());
+function show(){$('lock').classList.add('hidden');$('app').classList.remove('hidden');render()}
+if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:24px">Браузер не поддерживает шифрование. Откройте в Safari или Chrome.</p>'}
+else if(location.hash.length>1){$('lock').classList.remove('hidden');setTimeout(()=>$('pinIn').focus(),50)}
+else{S=blank();dirty=true;show();$('editor').open=true}
+</script>
+</body>
+</html>
