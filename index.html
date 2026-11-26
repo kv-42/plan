@@ -103,9 +103,18 @@ body.view .edit-only{display:none!important}
 .months.big .cal{gap:4px}.months.big .d{font-size:16px;border-radius:9px}.months.big .wd{font-size:12px}
 .months.big .mname{font-size:16px;margin-bottom:6px}.months.big .pb{height:5px;left:6px;right:6px;bottom:4px}
 .selbar{position:fixed;left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));z-index:11;max-width:560px;margin:0 auto;background:var(--surface);border:1px solid var(--muted);border-radius:16px;padding:10px 12px}
-.selbar .si{font-size:15px}.selbar .si span{color:var(--muted);font-size:13px}
+.selbar .si{font-size:15px;position:relative;padding-right:40px}.selbar .si span{color:var(--muted);font-size:13px}
+.selbar .sx{position:absolute;right:-6px;top:-8px;min-height:40px;min-width:40px;border:0;background:transparent;font-size:18px;color:var(--muted)}
+.selbar .sn{flex:1.3;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px}
+.chips{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;margin:0 -16px 4px;padding:8px 16px;background:var(--bg);scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.months>div{scroll-margin-top:64px}
+.chips button{flex:none;min-height:40px;border-radius:999px;font-size:14px;padding:0 14px;white-space:nowrap}
+.chips button.on{background:var(--vac);border-color:var(--vac);color:#fff}
+.ideas{font-size:13px;color:var(--text-2);margin:0 0 10px}
+.ideas .row{gap:6px;margin-top:6px}.ideas button{min-height:40px;font-size:14px;border-style:dashed;text-align:left}
 .selbar .sa{display:flex;gap:6px;margin-top:8px}.selbar .sa button{flex:1;min-height:44px;padding:0 4px;font-size:18px}
-.selbar .sa button[data-s=fit]{flex:2.4;font-size:14px}
+.selbar .sa button[data-s=fit]{flex:2;font-size:15px}
 .selbar .sh{font-size:12px;color:var(--muted);margin-top:6px;min-height:16px}
 body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 .note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5}
@@ -136,6 +145,8 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
   <p class="sub" id="forecast" style="margin:0"></p></header>
 
   <div data-pane="cal">
+  <div class="chips edit-only" id="chips" role="toolbar" aria-label="Части отпуска"></div>
+  <div class="ideas edit-only" id="ideas"></div>
   <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><p class="sub" id="calTitle" style="margin:0"></p><button class="sm" id="zoom" type="button"></button></div>
   <div class="legend">
     <span><i class="lg" style="background:var(--vac)"></i>отпуск</span>
@@ -344,7 +355,7 @@ function render(){
   const f=M.avgL?`Цикл ≈ ${+M.avgL.toFixed(1)} дн.${M.sdL>0.05?' (±'+M.sdL.toFixed(1).replace('.',',')+')':''}, месячные ≈ ${M.avgP} дн., запас ±${S.f}.${M.starts.length?' Ближайшие: '+M.starts.slice(0,2).map(niceY).join(', '):''}`.replace(/(\d)\.(\d)/g,'$1,$2'):'Нет дат месячных — прогноза нет. Добавьте даты в «Данные».';
   $('forecast').textContent=f;
   if(SEL!==null&&!S.p[SEL])SEL=null;
-  renderSummary();renderParts();renderCal();fillEditor();selbar();
+  renderSummary();renderParts();renderCal();fillEditor();selbar();if(EDIT){renderChips();renderIdeas()}
   dot();
   if(dirty)$('saveMsg').textContent='Есть изменения — сохраните в новую ссылку';
 }
@@ -379,7 +390,7 @@ function monthOpts(sel){const r=rng();let o=`<option value="">месяц: люб
 function renderParts(){
   const box=$('parts');
   box.innerHTML=S.p.map((p,i)=>{
-    const ds=span(p),h=hits(ds),a=alts(i),ext=ds.length-p[1];
+    const ds=span(p),h=hits(ds),ext=ds.length-p[1];
     const lock=p[2]==='c'&&!S.v.split,sk=streak(ds);
     let iss=[];
     if(h.l)iss.push(`месячные: ${runs(ds,M.likely)}`);
@@ -391,17 +402,11 @@ function renderParts(){
         <button type="button" class="rng" data-act="show" title="Показать на календаре">${nice(ds[0])} – ${nice(ds[ds.length-1])}</button>
         <span style="font-size:13px;color:var(--muted)">${p[1]} дн.${ext?' + '+ext+' празд.':''} · отдых подряд ${sk.total}</span>
         <button class="sm icon x edit-only" data-act="del" aria-label="Удалить часть">×</button></div>
-      <div class="row prow edit-only">
-        <button class="sm icon" data-act="prev" aria-label="На день раньше">◀</button>
-        <input type="date" data-act="date" value="${p[0]}" aria-label="Начало">
-        <button class="sm icon" data-act="next" aria-label="На день позже">▶</button>
-        <input type="number" data-act="days" min="1" max="200" value="${p[1]}" ${lock?'disabled title="Перенос одним куском"':''} aria-label="Дней отпуска"></div>
       <div class="row prow edit-only" style="margin-top:6px">
         <select data-act="month" aria-label="Месяц">${monthOpts(p[3])}</select>
         <button class="sm" data-act="fit" ${p[3]?'':'disabled'}>Подобрать</button></div>
       <div class="strip" aria-hidden="true">${strip}</div>
       <div class="issues">${iss.length?iss.join(' · '):'<span class="good">✓ без пересечений</span>'}</div>
-      ${a.length?`<div class="alts edit-only"><span class="hint" style="width:100%;margin:0">Сдвинуть без пересечений:</span>${a.map(x=>`<button data-act="go" data-s="${iso(x.s)}">${nice(x.s)} (${x.off>0?'+':'−'}${Math.abs(x.off)}): ${x.h.l?x.h.l+' вер.':''}${x.h.m?' '+x.h.m+' возм.':''}${!x.h.l&&!x.h.m?'чисто':''}${x.h.a.length?' · '+x.h.a.length+' нежел.':''}</button>`).join('')}</div>`:''}
     </div>`}).join('')||'<p class="hint">Пока нет частей.</p>';
 }
 function renderCal(){
@@ -509,25 +514,28 @@ const TABS=EDIT?[['cal','Календарь'],['parts','Отпуск'],['data','
 $('tabs').innerHTML=TABS.map(([k,t])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${t}</span></button>`).join('');
 $('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
 function tab(k){document.querySelectorAll('[data-pane]').forEach(p=>p.classList.toggle('hidden',p.dataset.pane!==k));
-  $('tabs').querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));CUR=k;if(M)selbar();scrollTo(0,0)}
+  $('tabs').querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));CUR=k;if(k==='cal'&&EDIT&&SEL===null&&S&&S.p.length){SEL=0;if(M){renderCal();renderChips()}}if(M)selbar();scrollTo(0,0);
+  if(k==='cal'&&SEL!==null&&S.p[SEL]){const el=$('m-'+S.p[SEL][0].slice(0,7));if(el)el.scrollIntoView({block:'start'})}}
 /* ---------- calendar: select a part, tap a day to move it ---------- */
 function selbar(){
   const b=$('selbar'),p=SEL!==null&&S.p[SEL];
   if(!p||CUR!=='cal'){b.classList.add('hidden');document.body.classList.remove('hasSel');return}
   const ds=span(p),sk=streak(ds),h=hits(ds),lock=p[2]==='c'&&!S.v.split;
-  b.innerHTML=`<div class="si"><b>${nice(ds[0])} – ${nice(ds[ds.length-1])}</b> <span>${p[2]==='c'?'перенос':'новый год'} · ${p[1]} дн. · отдых подряд ${sk.total}${h.l?' · месячные '+h.l+' дн.':''}${h.a.length?' · нежел. '+h.a.length:''}</span></div>`+
-    (EDIT?`<div class="sa"><button data-s="prev" aria-label="На день раньше">◀</button><button data-s="next" aria-label="На день позже">▶</button><button data-s="minus" ${lock?'disabled':''} aria-label="На день короче">−</button><button data-s="plus" ${lock?'disabled':''} aria-label="На день длиннее">+</button><button data-s="fit" title="Лучшее место в этом месяце">Подобрать</button><button data-s="close" aria-label="Снять выбор">✕</button></div><div class="sh" id="selHint">Нажмите на день — отпуск начнётся с него</div>`
-         :`<div class="sa"><button data-s="close" style="font-size:15px">Закрыть</button></div>`);
+  b.innerHTML=`<div class="si"><b>${nice(ds[0])} – ${nice(ds[ds.length-1])}</b> <span>${p[2]==='c'?'перенос':'новый год'} · отдых подряд ${sk.total}${h.l?' · месячные '+h.l+' дн.':''}${h.a.length?' · нежел. '+h.a.length:''}</span><button class="sx" data-s="close" aria-label="Снять выбор">✕</button></div>`+
+    (EDIT?`<div class="sa"><button data-s="m7" aria-label="На неделю раньше">−7</button><button data-s="prev" aria-label="На день раньше">◀</button><button data-s="next" aria-label="На день позже">▶</button><button data-s="p7" aria-label="На неделю позже">+7</button></div>
+      <div class="sa"><button data-s="minus" ${lock?'disabled':''} aria-label="На день короче">−</button><span class="sn">${p[1]} дн.</span><button data-s="plus" ${lock?'disabled':''} aria-label="На день длиннее">+</button><button data-s="fit" class="primary" title="Лучшее место в этом месяце">Подобрать</button></div>
+      <div class="sh" id="selHint">${HINT}</div>`:'');
   b.classList.remove('hidden');document.body.classList.add('hasSel');
 }
-function flash(t){const h=$('selHint');if(h){h.textContent=t;h.style.color='var(--bad)';setTimeout(()=>{if($('selHint')){$('selHint').textContent='Нажмите на день — отпуск начнётся с него';$('selHint').style.color=''}},1800)}}
+const HINT='Или нажмите на день в календаре — отпуск начнётся с него';
+function flash(t){const h=$('selHint');if(h){h.textContent=t;h.style.color='var(--bad)';setTimeout(()=>{if($('selHint')){$('selHint').textContent=HINT;$('selHint').style.color=''}},1800)}}
 function tryMove(i,s){
   const p=S.p[i],ds=span([iso(s),p[1],p[2]]),busy=others(i);
   if(ds.some(d=>busy.has(d)))return flash('Пересекается с другой частью');
   if(ds[0]<M.yA||ds[ds.length-1]>M.yB)return flash('Вне периода плана');
   change(()=>{p[0]=iso(s);if(p[3]&&p[0].slice(0,7)!==p[3])p[3]=p[0].slice(0,7)});
 }
-function focusPart(i){SEL=i;tab('cal');renderCal();selbar();const el=$('m-'+S.p[i][0].slice(0,7));if(el)el.scrollIntoView({block:'start'})}
+function focusPart(i){SEL=i;renderCal();if(EDIT)renderChips();tab('cal')}
 $('months').addEventListener('click',e=>{
   const c=e.target.closest('[data-d]');if(!c)return;const d=+c.dataset.d;
   const pi=S.p.findIndex(p=>span(p).includes(d));
@@ -539,14 +547,50 @@ $('months').addEventListener('click',e=>{
 $('selbar').addEventListener('click',e=>{
   const b=e.target.closest('[data-s]');if(!b||SEL===null)return;const a=b.dataset.s,i=SEL,p=S.p[i];
   if(a==='close'){SEL=null;renderCal();selbar();return}
-  if(a==='prev'||a==='next')tryMove(i,fromIso(p[0])+(a==='next'?1:-1));
+  if(a==='prev'||a==='next'||a==='m7'||a==='p7')tryMove(i,fromIso(p[0])+({prev:-1,next:1,m7:-7,p7:7})[a]);
   if(a==='minus'&&p[1]>1)change(()=>{p[1]--});
   if(a==='plus')change(()=>{p[1]++});
   if(a==='fit')change(()=>{if(!p[3])p[3]=p[0].slice(0,7);fit(i)});
 });
 $('zoom').onclick=()=>{BIG=!BIG;try{localStorage.setItem('plan.big',BIG?'1':'0')}catch(_){}renderCal()};
+function shortRng(p){const ds=span(p),a=dt(ds[0]),b=dt(ds[ds.length-1]);return (a.getUTCMonth()===b.getUTCMonth()?a.getUTCDate():nice(ds[0]))+'–'+nice(ds[ds.length-1])}
+function renderChips(){
+  $('chips').innerHTML=S.p.map((p,i)=>`<button type="button" data-i="${i}" class="${i===SEL?'on':''}" aria-pressed="${i===SEL}">${shortRng(p)} · ${p[1]}</button>`).join('')+
+    `<button type="button" data-add="y">+ часть</button>`;
+}
+$('chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.add){const before=new Set(S.p);addPart('y');const i=S.p.findIndex(p=>!before.has(p));if(i>=0)focusPart(i);return}
+  focusPart(+b.dataset.i)});
+// Ideas for the year days not yet placed: blocks that start and end on working days, contain no avoid dates,
+// touch a weekday public day off, give >= 2 days off per vacation day; per cluster keep the biggest gain.
+function ideas(){
+  const R=S.v.year-S.p.filter(p=>p[2]==='y').reduce((a,p)=>a+p[1],0);if(R<=0)return {R,list:[]};
+  const busy=new Set();S.p.forEach(p=>span(p).forEach(d=>busy.add(d)));
+  const a=Math.max(M.yA,dn(M.y,1,1)),b=Math.min(M.yB,dn(M.y,12,31)),wk=d=>[0,6].includes(dt(d).getUTCDay()),best=new Map();
+  for(let s=a;s<=b;s++){if(M.off(s))continue;
+    for(let L=1;L<=Math.min(R,10);L++){
+      const ds=span([iso(s),L,'y']),e=ds[ds.length-1];if(e>b)break;
+      if(ds.some(d=>busy.has(d)||M.av.has(d)))break;
+      if(M.off(e))continue;
+      const sk=streak(ds),w0=ds[0]-sk.before,w1=e+sk.after;if(busy.has(w0-1)||busy.has(w1+1))continue;
+      let key=null;for(let d=w0;d<=w1;d++)if(!wk(d)&&M.off(d)){key=d;break}
+      if(key===null||sk.total/L<2)continue;
+      const c={s,L,w0,w1,total:sk.total,gain:sk.total-L,ratio:sk.total/L,per:hits(ds).l},o=best.get(key);
+      if(!o||lexLess([-c.gain,-c.ratio,c.per],[-o.gain,-o.ratio,o.per]))best.set(key,c);
+    }}
+  const out=[];for(const c of [...best.values()].sort((x,z)=>x.w0-z.w0)){const pr=out.at(-1);if(pr&&c.w0<=pr.w1){if(c.gain>pr.gain)out[out.length-1]=c;continue}out.push(c)}
+  return {R,list:out};
+}
+function renderIdeas(){
+  const {R,list}=ideas(),box=$('ideas');
+  if(R<=0){box.innerHTML='';return}
+  box.innerHTML=`Не распределено ${R} дн.${list.length?' Идеи у праздников:':''}<div class="row">${list.map(c=>`<button type="button" data-s="${iso(c.s)}" data-l="${c.L}">+ ${shortRng([iso(c.s),c.L])}: ${c.L} дн. → ${c.total} отдыха</button>`).join('')}</div>`;
+}
+$('ideas').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  const st=b.dataset.s;change(()=>{S.p.push([st,+b.dataset.l,'y',st.slice(0,7)]);S.p.sort((x,z)=>x[0]<z[0]?-1:1)});
+  focusPart(S.p.findIndex(p=>p[0]===st))});
 function dot(){const b=$('tabs').querySelector('[data-tab=link]');if(b)b.classList.toggle('dot',dirty)}
-function show(first){$('lock').classList.add('hidden');$('app').classList.remove('hidden');$('tabs').classList.remove('hidden');render();tab(first||(EDIT?'parts':'cal'))}
+function show(first){$('lock').classList.add('hidden');$('app').classList.remove('hidden');$('tabs').classList.remove('hidden');render();tab(first||'cal')}
 if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:24px">Браузер не поддерживает шифрование. Откройте в Safari или Chrome.</p>'}
 else if(location.hash.length>1){$('lock').classList.remove('hidden');setTimeout(()=>$('pinIn').focus(),50)}
 else if(EDIT){S=blank();dirty=true;show('data')}
