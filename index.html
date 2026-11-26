@@ -132,6 +132,7 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
     <button class="primary" type="submit" id="lockBtn" style="width:100%">Открыть</button>
   </form>
   <p class="hint edit-only" style="margin-top:18px"><a href="#" id="newLink" style="color:inherit">Создать новую пустую ссылку</a></p>
+  <p class="hint" id="ver" style="margin-top:18px"></p>
 </section>
 
 <section id="empty" class="lock hidden">
@@ -225,7 +226,7 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 
 <script>
 "use strict";
-const ITER=400000, DAY=864e5, EDIT=new URLSearchParams(location.search).has('edit');
+const ITER=400000, DAY=864e5, EDIT=new URLSearchParams(location.search).has('edit'), BUILD='7';
 document.body.classList.toggle('view',!EDIT);
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MON_G=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
@@ -487,9 +488,10 @@ $('save').onclick=async()=>{
   if(pin.length<4){$('saveMsg').textContent='PIN — минимум 4 символа';$('pinSave').focus();return}
   $('save').disabled=true;$('saveMsg').textContent='Шифрую…';
   try{
-    const h=await seal(S,pin);PIN=pin;history.replaceState(null,'','?edit#'+h);
+    const h=await seal(S,pin);PIN=pin;history.replaceState(null,'','?edit&v='+BUILD+'#'+h);
     const base=location.origin+location.pathname;
-    $('linkOut').value=base+'#'+h;$('linkEdit').value=base+'?edit#'+h;$('links').classList.remove('hidden');
+    // ?v= changes with each page version so browsers and Telegram do not reuse a cached old page
+    $('linkOut').value=base+'?v='+BUILD+'#'+h;$('linkEdit').value=base+'?edit&v='+BUILD+'#'+h;$('links').classList.remove('hidden');
     const copied=await copy('linkOut');
     dirty=false;dot();$('saveMsg').textContent=copied?'Ссылка для просмотра скопирована ✓':'Скопируйте ссылку ниже';
   }catch(e){$('saveMsg').textContent='Ошибка шифрования'}
@@ -512,6 +514,7 @@ const IC={cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h1
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'};
 const TABS=EDIT?[['cal','Календарь'],['parts','Отпуск'],['data','Данные'],['link','Ссылка']]:[['cal','Календарь'],['parts','Отпуск']];
 $('tabs').innerHTML=TABS.map(([k,t])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${t}</span></button>`).join('');
+$('ver').textContent=(EDIT?'редактор':'просмотр')+' · версия '+BUILD;
 $('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
 function tab(k){document.querySelectorAll('[data-pane]').forEach(p=>p.classList.toggle('hidden',p.dataset.pane!==k));
   $('tabs').querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));CUR=k;if(k==='cal'&&EDIT&&SEL===null&&S&&S.p.length){SEL=0;if(M){renderCal();renderChips()}}if(M)selbar();scrollTo(0,0);
