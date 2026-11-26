@@ -39,6 +39,7 @@ label.f{display:block;font-size:13px;color:var(--text-2);margin:10px 0 4px}
 .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .hidden{display:none!important}
 body.view .edit-only{display:none!important}
+body:not(.view) .view-only{display:none!important}
 /* lock */
 .lock{max-width:340px;margin:12vh auto 0;text-align:center}
 .lock input{font-size:28px;letter-spacing:.3em;text-align:center;margin:14px 0}
@@ -142,7 +143,7 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 </section>
 
 <section id="app" class="hidden">
-  <header class="head"><h1 id="title">План отпуска</h1>
+  <header class="head"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h1 id="title">План отпуска</h1><button class="sm view-only" id="toEdit" type="button">Изменить</button></div>
   <p class="sub" id="forecast" style="margin:0"></p></header>
 
   <div data-pane="cal">
@@ -226,7 +227,8 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 
 <script>
 "use strict";
-const ITER=400000, DAY=864e5, EDIT=new URLSearchParams(location.search).has('edit'), BUILD='8';
+const ITER=400000, DAY=864e5, BUILD='9';
+let EDIT=new URLSearchParams(location.search).has('edit');
 document.body.classList.toggle('view',!EDIT);
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MON_G=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
@@ -512,8 +514,18 @@ const IC={cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h1
   parts:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
   data:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'};
-const TABS=EDIT?[['cal','Календарь'],['parts','Отпуск'],['data','Данные'],['link','Ссылка']]:[['cal','Календарь'],['parts','Отпуск']];
-$('tabs').innerHTML=TABS.map(([k,t])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${t}</span></button>`).join('');
+function buildTabs(){
+  const T=EDIT?[['cal','Календарь'],['parts','Отпуск'],['data','Данные'],['link','Ссылка']]:[['cal','Календарь'],['parts','Отпуск']];
+  $('tabs').innerHTML=T.map(([k,t])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${t}</span></button>`).join('');
+}
+buildTabs();
+// view -> edit in place: same data, PIN already known, keeps the selected part
+function enterEdit(){
+  EDIT=true;document.body.classList.remove('view');history.replaceState(null,'','?edit&v='+BUILD+location.hash);
+  $('pinSave').value=PIN;buildTabs();BIG=true;try{const z=localStorage.getItem('plan.big');if(z!==null)BIG=z==='1'}catch(_){}
+  render();tab('cal');
+}
+$('toEdit').onclick=enterEdit;
 $('ver').textContent=(EDIT?'редактор':'просмотр')+' · версия '+BUILD;
 $('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
 function tab(k){document.querySelectorAll('[data-pane]').forEach(p=>p.classList.toggle('hidden',p.dataset.pane!==k));
@@ -527,7 +539,7 @@ function selbar(){
   b.innerHTML=`<div class="si"><b>${nice(ds[0])} – ${nice(ds[ds.length-1])}</b> <span>${p[2]==='c'?'перенос':'новый год'} · отдых подряд ${sk.total}${h.l?' · месячные '+h.l+' дн.':''}${h.a.length?' · нежел. '+h.a.length:''}</span><button class="sx" data-s="close" aria-label="Снять выбор">✕</button></div>`+
     (EDIT?`<div class="sa"><button data-s="m7" aria-label="На неделю раньше">−7</button><button data-s="prev" aria-label="На день раньше">◀</button><button data-s="next" aria-label="На день позже">▶</button><button data-s="p7" aria-label="На неделю позже">+7</button></div>
       <div class="sa"><button data-s="minus" ${lock?'disabled':''} aria-label="На день короче">−</button><span class="sn">${p[1]} дн.</span><button data-s="plus" ${lock?'disabled':''} aria-label="На день длиннее">+</button><button data-s="fit" class="primary" title="Лучшее место в этом месяце">Подобрать</button></div>
-      <div class="sh" id="selHint">${HINT}</div>`:'');
+      <div class="sh" id="selHint">${HINT}</div>`:`<div class="sa"><button data-s="edit" class="primary" style="font-size:16px">Изменить / двигать</button></div>`);
   b.classList.remove('hidden');document.body.classList.add('hasSel');
 }
 const HINT='Или нажмите на день в календаре — отпуск начнётся с него';
@@ -555,6 +567,7 @@ $('months').addEventListener('click',e=>{
 $('selbar').addEventListener('click',e=>{
   const b=e.target.closest('[data-s]');if(!b||SEL===null)return;const a=b.dataset.s,i=SEL,p=S.p[i];
   if(a==='close'){SEL=null;renderCal();selbar();return}
+  if(a==='edit'){enterEdit();return}
   if(a==='prev'||a==='next'||a==='m7'||a==='p7')tryMove(i,fromIso(p[0])+({prev:-1,next:1,m7:-7,p7:7})[a]);
   if(a==='minus'&&p[1]>1)change(()=>{p[1]--});
   if(a==='plus')change(()=>{p[1]++});
