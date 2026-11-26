@@ -56,41 +56,47 @@ body:not(.view) .view-only{display:none!important}
 .st.info i{color:var(--per)}.st.ok i{color:var(--ok)}.st.warn i{color:var(--warn)}.st.bad i{color:var(--bad)}
 /* legend */
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--text-2);margin:10px 0 8px}
-.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend>span{display:inline-flex;align-items:center;gap:6px}
 .lg{width:16px;height:16px;border-radius:4px;position:relative;display:inline-block}
 /* parts */
 .parts{display:grid;gap:10px}
 .part .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .tag{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-2)}
-.part .rng{font-weight:600}
 .part .x{margin-left:auto}
-.prow{flex-wrap:nowrap;gap:6px}.prow select{flex:1;min-width:0;width:auto;padding:0 8px}.prow input[type=date]{flex:1;min-width:0;width:auto}.prow input[type=number]{width:58px;flex:none}
+.part button.rng{border:0;background:none;padding:0;min-height:0;font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--muted)}
+.prow{flex-wrap:nowrap;gap:6px}.prow select{flex:1;min-width:0;width:auto;padding:0 8px}
 .issues{font-size:13px;margin-top:6px;color:var(--text-2)}
+.issues .good{color:var(--ok)}
 .strip{display:flex;gap:1px;margin-top:8px;height:14px}
 .strip i{flex:1;min-width:2px;background:var(--vac);border-radius:2px;position:relative}
 .strip i.p::after,.strip i.ps::after{content:'';position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--per);border-radius:0 0 2px 2px}
 .strip i.ps::after{background:var(--per-soft)}
 .strip i.a{box-shadow:inset 0 0 0 2px var(--avoid)}
 .strip i.h{opacity:.45}
-.issues b{color:var(--bad);font-weight:600}
-.issues .good{color:var(--ok)}
-.alts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.alts button{font-size:14px;min-height:36px;padding:0 10px}
 /* calendar */
 .months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}
 @media (min-width:640px){.months{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (min-width:820px){.months{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.months>div{scroll-margin-top:64px}
 .mname{font-size:14px;font-weight:600;margin:0 0 4px 2px}
 .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
 .wd{font-size:10px;color:var(--muted);text-align:center}
 .d{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:12px;border-radius:5px;color:var(--text)}
+.d[data-d]{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .d.we{color:var(--muted)}
 .d.v{background:var(--vac);color:var(--vac-text);font-weight:600}
 .d.a{box-shadow:inset 0 0 0 2px var(--avoid)}
 .d.h{font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.d.sel{outline:2.5px solid var(--text);outline-offset:-1px;z-index:1}
 .pb{position:absolute;left:2px;right:2px;bottom:1px;height:4px;border-radius:2px;background:var(--per);box-shadow:0 0 0 1px var(--surface)}
 .pb.s{background:var(--per-soft)}
 .lg .pb{bottom:2px}
+.months.big{grid-template-columns:1fr;gap:20px}
+@media (min-width:640px){.months.big{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:960px){.months.big{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.months.big .cal{gap:4px}.months.big .d{font-size:16px;border-radius:9px}.months.big .wd{font-size:12px}
+.months.big .mname{font-size:16px;margin-bottom:6px}.months.big .pb{height:5px;left:6px;right:6px;bottom:4px}
+/* link */
 .savebar input.pin{width:120px;letter-spacing:.2em;text-align:center}
 .link{font-family:ui-monospace,monospace;flex:1;min-width:0}
 /* tabs: bottom bar, thumb reach, safe area */
@@ -100,29 +106,24 @@ body:not(.view) .view-only{display:none!important}
 .tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tabs button.dot span::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-left:4px;vertical-align:1px}
 .head{margin-bottom:12px}
-.part button.rng{border:0;background:none;padding:0;min-height:0;font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--muted)}
-.d[data-d]{cursor:pointer;-webkit-tap-highlight-color:transparent}
-.d.sel{outline:2.5px solid var(--text);outline-offset:-1px;z-index:1}
-.months.big{grid-template-columns:1fr;gap:20px}
-@media (min-width:640px){.months.big{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (min-width:960px){.months.big{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.months.big .cal{gap:4px}.months.big .d{font-size:16px;border-radius:9px}.months.big .wd{font-size:12px}
-.months.big .mname{font-size:16px;margin-bottom:6px}.months.big .pb{height:5px;left:6px;right:6px;bottom:4px}
+.head h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.head .row button.sm{padding:0 10px}
+@media (max-width:420px){.head h1{font-size:20px}}
+/* move panel */
 .selbar{position:fixed;left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));z-index:11;max-width:560px;margin:0 auto;background:var(--surface);border:1px solid var(--muted);border-radius:16px;padding:10px 12px}
 .selbar .si{font-size:15px;position:relative;padding-right:40px}.selbar .si span{color:var(--muted);font-size:13px}
 .selbar .sx{position:absolute;right:-6px;top:-8px;min-height:40px;min-width:40px;border:0;background:transparent;font-size:18px;color:var(--muted)}
 .selbar .sn{flex:1.3;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px}
-.chips{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;margin:0 -16px 4px;padding:8px 16px;background:var(--bg);scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.months>div{scroll-margin-top:64px}
-.chips button{flex:none;min-height:40px;border-radius:999px;font-size:14px;padding:0 14px;white-space:nowrap}
-.chips button.on{background:var(--vac);border-color:var(--vac);color:#fff}
-.ideas{font-size:13px;color:var(--text-2);margin:0 0 10px}
-.ideas .row{gap:6px;margin-top:6px}.ideas button{min-height:40px;font-size:14px;border-style:dashed;text-align:left}
 .selbar .sa{display:flex;gap:6px;margin-top:8px}.selbar .sa button{flex:1;min-height:44px;padding:0 4px;font-size:18px}
 .selbar .sa button[data-s=fit]{flex:2;font-size:15px}
 .selbar .sh{font-size:12px;color:var(--muted);margin-top:6px;min-height:16px}
 body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
+.chips{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;margin:0 -16px 4px;padding:8px 16px;background:var(--bg);scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;min-height:40px;border-radius:999px;font-size:14px;padding:0 14px;white-space:nowrap}
+.chips button.on{background:var(--vac);border-color:var(--vac);color:#fff}
+.ideas{font-size:13px;color:var(--text-2);margin:0 0 10px}
+.ideas .row{gap:6px;margin-top:6px}.ideas button{min-height:40px;font-size:14px;border-style:dashed;text-align:left}
 .note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5}
 </style>
 </head>
@@ -130,126 +131,240 @@ body.hasSel .wrap{padding-bottom:calc(240px + env(safe-area-inset-bottom))}
 <main class="wrap">
 
 <section id="lock" class="lock hidden">
-  <h1>План отпуска</h1>
-  <p class="sub">Данные зашифрованы в ссылке. Введите PIN.</p>
+  <h1 data-t="title"></h1>
+  <p class="sub" data-t="lockSub"></p>
   <form id="lockForm" autocomplete="off">
     <input id="pinIn" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN" maxlength="32">
     <div class="err" id="lockErr" role="alert"></div>
-    <button class="primary" type="submit" id="lockBtn" style="width:100%">Открыть</button>
+    <button class="primary" type="submit" id="lockBtn" style="width:100%" data-t="open"></button>
   </form>
-  <p class="hint edit-only" style="margin-top:18px"><a href="#" id="newLink" style="color:inherit">Создать новую пустую ссылку</a></p>
-  <p class="hint" id="ver" style="margin-top:18px"></p>
+  <p class="hint edit-only" style="margin-top:18px"><a href="#" id="newLink" style="color:inherit" data-t="newLink"></a></p>
+  <p class="hint" style="margin-top:18px"><span id="ver"></span> · <button type="button" class="lang" style="min-height:32px;padding:0 10px;font-size:13px"></button></p>
 </section>
 
 <section id="empty" class="lock hidden">
-  <h1>План отпуска</h1>
-  <p class="sub">Откройте страницу по ссылке с данными.</p>
-  <a href="?edit" style="color:inherit;font-size:14px">Создать свой план</a>
+  <h1 data-t="title"></h1>
+  <p class="sub" data-t="emptySub"></p>
+  <a href="?edit" style="color:inherit;font-size:14px" data-t="createOwn"></a>
 </section>
 
 <section id="app" class="hidden">
-  <header class="head"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h1 id="title">План отпуска</h1><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="sm icon" id="help" type="button" aria-label="Как пользоваться">?</button><button class="sm view-only" id="toEdit" type="button">Изменить</button></span></div>
+  <header class="head"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h1 data-t="title"></h1>
+    <span class="row" style="gap:6px;flex-wrap:nowrap"><button class="sm lang" type="button"></button><button class="sm icon" id="help" type="button" data-ta="howTo">?</button><button class="sm view-only" id="toEdit" type="button" data-t="toEdit"></button></span></div>
   <p class="sub" id="forecast" style="margin:0"></p></header>
 
   <div data-pane="cal">
-  <div class="chips edit-only" id="chips" role="toolbar" aria-label="Части отпуска"></div>
+  <div class="chips edit-only" id="chips" role="toolbar" data-ta="partsH"></div>
   <div class="ideas edit-only" id="ideas"></div>
   <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><p class="sub" id="calTitle" style="margin:0"></p><button class="sm" id="zoom" type="button"></button></div>
   <div class="legend">
-    <span><i class="lg" style="background:var(--vac)"></i>отпуск</span>
-    <span><i class="lg" style="background:var(--surface-2)"><i class="pb"></i></i>месячные</span>
-    <span><i class="lg" style="background:var(--surface-2)"><i class="pb s"></i></i>возможно</span>
-    <span><i class="lg" style="box-shadow:inset 0 0 0 2px var(--avoid)"></i>нежелательно</span>
-    <span><b style="text-decoration:underline">15</b> праздник</span>
-    <span><span style="color:var(--muted)">15</span> выходной</span>
+    <span><i class="lg" style="background:var(--vac)"></i><span data-t="legVac"></span></span>
+    <span><i class="lg" style="background:var(--surface-2)"><i class="pb"></i></i><span data-t="legPer"></span></span>
+    <span><i class="lg" style="background:var(--surface-2)"><i class="pb s"></i></i><span data-t="legMaybe"></span></span>
+    <span><i class="lg" style="box-shadow:inset 0 0 0 2px var(--avoid)"></i><span data-t="legAvoid"></span></span>
+    <span><b style="text-decoration:underline">15</b><span data-t="legHol"></span></span>
+    <span><span style="color:var(--muted)">15</span><span data-t="legOff"></span></span>
   </div>
   <div class="months" id="months"></div>
   </div>
 
   <div data-pane="parts" class="hidden">
   <div class="card sum" id="summary"></div>
-
-  <h2>Части отпуска</h2>
+  <h2 data-t="partsH"></h2>
   <div class="parts" id="parts"></div>
   <div class="row edit-only" style="margin-top:10px">
-    <button class="sm" id="addC">+ из переноса</button>
-    <button class="sm" id="addY">+ из нового года</button>
-    <button class="sm primary" id="fitAll">Подобрать все по месяцам</button>
+    <button class="sm" id="addC" data-t="addC"></button>
+    <button class="sm" id="addY" data-t="addY"></button>
+    <button class="sm primary" id="fitAll" data-t="fitAll"></button>
   </div>
-  <p class="hint edit-only">Выберите месяц у части — «Подобрать» поставит её так, чтобы вместе с выходными и праздниками вышло больше дней отдыха подряд, обходя нежелательные даты.</p>
-  <p class="note">Дни отпуска считаются календарными, праздники не входят и продлевают отпуск. Прогноз месячных — из дат в данных (например, из Flo), дальше по среднему циклу. Ничего не хранится на сервере: всё в ссылке, расшифровка в браузере.</p>
+  <p class="hint edit-only" data-t="fitHint"></p>
+  <p class="note" data-t="noteParts"></p>
   </div>
 
   <div data-pane="data" class="hidden edit-only">
   <div class="card" id="editor">
     <div class="row">
-      <div><label class="f" for="eFrom">План с</label><input id="eFrom" type="month"></div>
-      <div><label class="f" for="eTo">по</label><input id="eTo" type="month"></div>
-      <div><label class="f" for="eFr">Запас прогноза, ± дн.</label><input id="eFr" type="number" min="0" max="10"></div>
+      <div><label class="f" for="eFrom" data-t="eFrom"></label><input id="eFrom" type="month"></div>
+      <div><label class="f" for="eTo" data-t="eTo"></label><input id="eTo" type="month"></div>
+      <div><label class="f" for="eFr" data-t="eFr"></label><input id="eFr" type="number" min="0" max="10"></div>
     </div>
     <div class="row">
-      <div><label class="f" for="eCarry">Перенос, дн.</label><input id="eCarry" type="number" min="0" max="200"></div>
-      <div><label class="f" for="eYearDays">На год, дн.</label><input id="eYearDays" type="number" min="0" max="200"></div>
-      <div><label class="f" for="eMin">Одна часть не короче</label><input id="eMin" type="number" min="0" max="100"></div>
+      <div><label class="f" for="eCarry" data-t="eCarry"></label><input id="eCarry" type="number" min="0" max="200"></div>
+      <div><label class="f" for="eYearDays" data-t="eYearDays"></label><input id="eYearDays" type="number" min="0" max="200"></div>
+      <div><label class="f" for="eMin" data-t="eMin"></label><input id="eMin" type="number" min="0" max="100"></div>
     </div>
-    <label class="row" style="margin-top:10px;font-size:14px"><input id="eSplit" type="checkbox" style="width:auto;min-height:0"> перенос можно делить на части</label>
-    <label class="f" for="eCycles">Месячные: дата начала и сколько дней, по строке (история или прогноз Flo; дальше продлится по среднему циклу)</label>
+    <label class="row" style="margin-top:10px;font-size:14px"><input id="eSplit" type="checkbox" style="width:auto;min-height:0"> <span data-t="eSplit"></span></label>
+    <label class="f" for="eCycles" data-t="eCycles"></label>
     <textarea id="eCycles" spellcheck="false" placeholder="12.10.2026 5&#10;09.11.2026 4"></textarea>
-    <label class="f" for="eHol">Праздники (не входят в дни отпуска)</label>
+    <label class="f" for="eHol" data-t="eHol"></label>
     <input id="eHol" spellcheck="false">
     <div class="row" style="align-items:flex-start">
-      <div style="flex:1;min-width:140px"><label class="f" for="eW">Доп. выходные (переносы)</label><input id="eW" spellcheck="false"></div>
-      <div style="flex:1;min-width:140px"><label class="f" for="eWs">Рабочие выходные (отработки)</label><input id="eWs" spellcheck="false"></div>
+      <div style="flex:1;min-width:140px"><label class="f" for="eW" data-t="eW"></label><input id="eW" spellcheck="false"></div>
+      <div style="flex:1;min-width:140px"><label class="f" for="eWs" data-t="eWs"></label><input id="eWs" spellcheck="false"></div>
     </div>
-    <label class="f" for="eAv">Нежелательные даты</label>
+    <label class="f" for="eAv" data-t="eAv"></label>
     <input id="eAv" spellcheck="false">
-    <p class="hint">Формат: <code>1.05</code>, <code>1.05-3.05</code>, <code>вс3.09</code> (3-е воскресенье сентября), <code>12.06.2027</code></p>
+    <p class="hint" data-th="fmtHint"></p>
     <div class="err" id="edErr"></div>
-    <button class="primary" id="apply" style="margin-top:6px;width:100%">Применить</button>
+    <button class="primary" id="apply" style="margin-top:6px;width:100%" data-t="apply"></button>
   </div>
   </div>
 
   <div data-pane="link" class="hidden edit-only">
   <div class="card savebar" id="savebar">
     <div class="row">
-      <span style="font-size:14px;flex:1;min-width:140px" id="saveMsg">Новая ссылка — можно с другим PIN</span>
-      <input class="pin" id="pinSave" type="password" inputmode="numeric" placeholder="PIN" aria-label="PIN для ссылки" autocomplete="off">
-      <button class="primary" id="save">Сохранить</button>
+      <span style="font-size:14px;flex:1;min-width:140px" id="saveMsg" data-t="saveMsg0"></span>
+      <input class="pin" id="pinSave" type="password" inputmode="numeric" placeholder="PIN" data-ta="pinAria" autocomplete="off">
+      <button class="primary" id="save" data-t="save"></button>
     </div>
     <div class="hidden" id="links">
-      <label class="f" for="linkOut">Для просмотра (отправить)</label>
-      <div class="row" style="flex-wrap:nowrap"><input class="link" id="linkOut" readonly><button class="sm" data-copy="linkOut">Копировать</button></div>
-      <label class="f" for="linkEdit">Для редактирования (себе)</label>
-      <div class="row" style="flex-wrap:nowrap"><input class="link" id="linkEdit" readonly><button class="sm" data-copy="linkEdit">Копировать</button></div>
+      <label class="f" for="linkOut" data-t="linkView"></label>
+      <div class="row" style="flex-wrap:nowrap"><input class="link" id="linkOut" readonly><button class="sm" data-copy="linkOut" data-t="copy"></button></div>
+      <label class="f" for="linkEdit" data-t="linkEdit"></label>
+      <div class="row" style="flex-wrap:nowrap"><input class="link" id="linkEdit" readonly><button class="sm" data-copy="linkEdit" data-t="copy"></button></div>
     </div>
   </div>
-  <p class="note">Ссылку для просмотра можно отправлять: в ней только календарь, без редактирования. PIN сообщайте отдельно.</p>
+  <p class="note" data-t="noteLink"></p>
   </div>
 </section>
 </main>
-<div class="selbar hidden" id="selbar" role="region" aria-label="Выбранная часть отпуска"></div>
-<div id="coach" class="hidden" role="dialog" aria-modal="true" aria-label="Как пользоваться"><div class="spot"></div>
+<div class="selbar hidden" id="selbar" role="region" data-ta="selAria"></div>
+<div id="coach" class="hidden" role="dialog" aria-modal="true" data-ta="howTo"><div class="spot"></div>
   <div class="tip"><div class="n" id="coachN"></div><div id="coachT"></div>
-  <div class="row"><button type="button" id="coachX">Закрыть</button><button type="button" class="primary" id="coachNext">Дальше</button></div></div></div>
-<nav class="tabs hidden" id="tabs" role="tablist" aria-label="Разделы"></nav>
+  <div class="row"><button type="button" id="coachX" data-t="close"></button><button type="button" class="primary" id="coachNext"></button></div></div></div>
+<nav class="tabs hidden" id="tabs" role="tablist" data-ta="tabsAria"></nav>
 
 <script>
 "use strict";
-const ITER=400000, DAY=864e5, BUILD='10';
+const ITER=400000, DAY=864e5, BUILD='11';
 let EDIT=new URLSearchParams(location.search).has('edit');
 document.body.classList.toggle('view',!EDIT);
-const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const MON_G=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
-const WDN={пн:1,вт:2,ср:3,чт:4,пт:5,сб:6,вс:0};
 const $=id=>document.getElementById(id);
 const enc=new TextEncoder(),dec=new TextDecoder();
 
+/* ---------- i18n: Russian / Belarusian ---------- */
+const I={ru:{
+  title:'План отпуска',lockSub:'Данные зашифрованы в ссылке. Введите PIN.',open:'Открыть',newLink:'Создать новую пустую ссылку',
+  emptySub:'Откройте страницу по ссылке с данными.',createOwn:'Создать свой план',howTo:'Как пользоваться',toEdit:'Изменить',
+  legVac:'отпуск',legPer:'месячные',legMaybe:'возможно',legAvoid:'нежелательно',legHol:'праздник',legOff:'выходной',
+  partsH:'Части отпуска',addC:'+ из переноса',addY:'+ из нового года',fitAll:'Подобрать все по месяцам',
+  fitHint:'Выберите месяц у части — «Подобрать» поставит её так, чтобы вместе с выходными и праздниками вышло больше дней отдыха подряд, обходя нежелательные даты.',
+  noteParts:'Дни отпуска считаются календарными, праздники не входят и продлевают отпуск. Прогноз месячных — из дат в данных (например, из Flo), дальше по среднему циклу. Ничего не хранится на сервере: всё в ссылке, расшифровка в браузере.',
+  eFrom:'План с',eTo:'по',eFr:'Запас прогноза, ± дн.',eCarry:'Перенос, дн.',eYearDays:'На год, дн.',eMin:'Одна часть не короче',eSplit:'перенос можно делить на части',
+  eCycles:'Месячные: дата начала и сколько дней, по строке (история или прогноз Flo; дальше продлится по среднему циклу)',
+  eHol:'Праздники (не входят в дни отпуска)',eW:'Доп. выходные (переносы)',eWs:'Рабочие выходные (отработки)',eAv:'Нежелательные даты',
+  fmtHint:'Формат: <code>1.05</code>, <code>1.05-3.05</code>, <code>вс3.09</code> (3-е воскресенье сентября), <code>12.06.2027</code>',
+  apply:'Применить',saveMsg0:'Новая ссылка — можно с другим PIN',pinAria:'PIN для ссылки',save:'Сохранить',
+  linkView:'Для просмотра (отправить)',linkEdit:'Для редактирования (себе)',copy:'Копировать',copied:'Скопировано ✓',selected:'Выделено',
+  noteLink:'Ссылку для просмотра можно отправлять: в ней только календарь, без редактирования. PIN сообщайте отдельно.',
+  selAria:'Выбранная часть отпуска',close:'Закрыть',next:'Дальше',done:'Готово',tabsAria:'Разделы',
+  tabCal:'Календарь',tabParts:'Отпуск',tabData:'Данные',tabLink:'Ссылка',
+  months:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+  monG:['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'],wds:['пн','вт','ср','чт','пт','сб','вс'],
+  forecast:(a,sd,p,f,nx)=>`Цикл ≈ ${a} дн.${sd}, месячные ≈ ${p} дн., запас ±${f}.${nx?' Ближайшие: '+nx:''}`,
+  noCycles:'Нет дат месячных — прогноза нет. Добавьте даты в «Данные».',dirtyMsg:'Есть изменения — сохраните в новую ссылку',
+  sumCarry:(sc,c,one,br,left)=>`Перенос: ${sc} из ${c} дн.${one?' — одним куском':''}${br?' (разбит, так нельзя)':''}${left?' — осталось '+left:''}`,
+  sumYear:(y,sy,yd,left,over)=>`Новый год (${y}): ${sy} из ${yd} дн.${left?' — осталось '+left:''}${over?' — перебор '+over:''}`,
+  sumMinOk:m=>`Есть часть не короче ${m} дн.`,sumMinBad:(m,mx)=>`Нужна хотя бы одна часть от ${m} дн. (сейчас самая длинная ${mx})`,
+  sumOverlap:'Части отпуска пересекаются',sumOut:r=>`Есть дни вне плана (${r})`,
+  sumPer:(l,m)=>`Месячные в отпуске: ${l} дн.${m?' (+'+m+' возможно)':''}`,sumPerNone:'Месячные на отпуск не попадают',
+  sumAvoid:x=>'Нежелательные даты в отпуске: '+x,sumEmpty:'Добавьте части отпуска',
+  monthAny:'месяц: любой',issPer:'месячные: ',issMaybe:'возможно: ',issAvoid:'нежелательно: ',tagC:'перенос',tagY:'новый год',
+  showCal:'Показать на календаре',partMeta:(d,ext,s)=>`${d} дн.${ext?' + '+ext+' празд.':''} · отдых подряд ${s}`,
+  del:'Удалить часть',month:'Месяц',fit:'Подобрать',clean:'✓ без пересечений',noParts:'Пока нет частей.',
+  zoomOut:'Обзор года',zoomIn:'Крупно',errPeriod:'период',errLine:l=>'строка «'+l+'»',errTransfers:'переносы: ',errHol:'праздники: ',errDates:'даты: ',errPrefix:'Не понял: ',
+  pinMin:'PIN — минимум 4 символа',encrypting:'Шифрую…',copiedView:'Ссылка для просмотра скопирована ✓',copyBelow:'Скопируйте ссылку ниже',encErr:'Ошибка шифрования',
+  checking:'Проверяю…',badPin:'Неверный PIN или битая ссылка',ver:(e,b)=>(e?'редактор':'просмотр')+' · версия '+b,
+  noCrypto:'Браузер не поддерживает шифрование. Откройте в Safari или Chrome.',
+  selMeta:(tag,s,l,a)=>`${tag} · отдых подряд ${s}${l?' · месячные '+l+' дн.':''}${a?' · нежел. '+a:''}`,
+  unsel:'Снять выбор',m7:'На неделю раньше',prev:'На день раньше',next1:'На день позже',p7:'На неделю позже',minus:'На день короче',plus:'На день длиннее',
+  fitTitle:'Лучшее место в этом месяце',editMove:'Изменить / двигать',hint:'Или нажмите на день в календаре — отпуск начнётся с него',
+  overlap:'Пересекается с другой частью',outside:'Вне периода плана',addChip:'+ часть',dd:'дн.',
+  ideasHead:(R,has)=>`Не распределено ${R} дн.${has?' Идеи у праздников:':''}`,idea:(r,L,tot)=>`+ ${r}: ${L} дн. → ${tot} отдыха`,
+  coachN:(i,n)=>`${i} из ${n}`,langAria:'Язык: русский / беларуский',
+  E:['Части отпуска. Нажмите на часть, чтобы выбрать её. «+ часть» — добавить новую.',
+     'Выбранная часть обведена рамкой. Нажмите на любой другой день — отпуск начнётся с него.',
+     '−7 ◀ ▶ +7 — сдвиг на неделю или на день. Смотрите:',
+     'Длина части и «Подобрать» — лучшее место в этом месяце: больше выходных и праздников подряд, без нежелательных дат.',
+     'Идеи на нераспределённые дни: короткие отпуска у праздников. Нажмите — часть добавится.',
+     'Синий — отпуск, красная черта — месячные, жёлтая рамка — лучше не в отпуске, подчёркнуто — праздник (не тратит дни отпуска).',
+     'Вкладка «Отпуск»: сколько дней осталось, правила и пересечения.',
+     'Вкладка «Ссылка»: «Сохранить» даст ссылку для просмотра (отправить) и для редактирования (себе). PIN сообщайте отдельно.'],
+  V:['Синий — отпуск, красная черта — месячные, жёлтая рамка — лучше не в отпуске, подчёркнуто — праздник.',
+     'Нажмите на отпуск — снизу появятся подробности: даты и сколько дней отдыха подряд.',
+     '«Изменить» включает редактор: отпуск можно двигать. Правки остаются у вас, пока вы не отправите новую ссылку.',
+     'Вкладка «Отпуск»: итоги и все части списком.']},
+be:{
+  title:'План адпачынку',lockSub:'Даныя зашыфраваныя ў спасылцы. Увядзіце PIN.',open:'Адкрыць',newLink:'Стварыць новую пустую спасылку',
+  emptySub:'Адкрыйце старонку па спасылцы з данымі.',createOwn:'Стварыць свой план',howTo:'Як карыстацца',toEdit:'Змяніць',
+  legVac:'адпачынак',legPer:'месячныя',legMaybe:'магчыма',legAvoid:'непажадана',legHol:'свята',legOff:'выхадны',
+  partsH:'Часткі адпачынку',addC:'+ з пераносу',addY:'+ з новага года',fitAll:'Падабраць усе па месяцах',
+  fitHint:'Выберыце месяц у часткі — «Падабраць» паставіць яе так, каб разам з выхаднымі і святамі выйшла больш дзён адпачынку запар, абыходзячы непажаданыя даты.',
+  noteParts:'Дні адпачынку лічацца каляндарнымі, святы не ўваходзяць і падаўжаюць адпачынак. Прагноз месячных — з дат у даных (напрыклад, з Flo), далей па сярэднім цыкле. Нічога не захоўваецца на серверы: усё ў спасылцы, расшыфроўка ў браўзеры.',
+  eFrom:'План з',eTo:'па',eFr:'Запас прагнозу, ± дз.',eCarry:'Перанос, дз.',eYearDays:'На год, дз.',eMin:'Адна частка не карацей за',eSplit:'перанос можна дзяліць на часткі',
+  eCycles:'Месячныя: дата пачатку і колькі дзён, па радку (гісторыя або прагноз Flo; далей працягнецца па сярэднім цыкле)',
+  eHol:'Святы (не ўваходзяць у дні адпачынку)',eW:'Дадатковыя выхадныя (пераносы)',eWs:'Працоўныя выхадныя (адпрацоўкі)',eAv:'Непажаданыя даты',
+  fmtHint:'Фармат: <code>1.05</code>, <code>1.05-3.05</code>, <code>нд3.09</code> (3-я нядзеля верасня), <code>12.06.2027</code>',
+  apply:'Ужыць',saveMsg0:'Новая спасылка — можна з іншым PIN',pinAria:'PIN для спасылкі',save:'Захаваць',
+  linkView:'Для прагляду (адправіць)',linkEdit:'Для рэдагавання (сабе)',copy:'Капіяваць',copied:'Скапіявана ✓',selected:'Вылучана',
+  noteLink:'Спасылку для прагляду можна адпраўляць: у ёй толькі каляндар, без рэдагавання. PIN паведамляйце асобна.',
+  selAria:'Выбраная частка адпачынку',close:'Закрыць',next:'Далей',done:'Гатова',tabsAria:'Раздзелы',
+  tabCal:'Каляндар',tabParts:'Адпачынак',tabData:'Даныя',tabLink:'Спасылка',
+  months:['Студзень','Люты','Сакавік','Красавік','Травень','Чэрвень','Ліпень','Жнівень','Верасень','Кастрычнік','Лістапад','Снежань'],
+  monG:['студ','лют','сак','крас','трав','чэрв','ліп','жн','вер','каст','ліст','снеж'],wds:['пн','аў','ср','чц','пт','сб','нд'],
+  forecast:(a,sd,p,f,nx)=>`Цыкл ≈ ${a} дз.${sd}, месячныя ≈ ${p} дз., запас ±${f}.${nx?' Бліжэйшыя: '+nx:''}`,
+  noCycles:'Няма дат месячных — прагнозу няма. Дадайце даты ў «Даныя».',dirtyMsg:'Ёсць змены — захавайце ў новую спасылку',
+  sumCarry:(sc,c,one,br,left)=>`Перанос: ${sc} з ${c} дз.${one?' — адным кавалкам':''}${br?' (падзелены, так нельга)':''}${left?' — засталося '+left:''}`,
+  sumYear:(y,sy,yd,left,over)=>`Новы год (${y}): ${sy} з ${yd} дз.${left?' — засталося '+left:''}${over?' — перабор '+over:''}`,
+  sumMinOk:m=>`Ёсць частка не карацей за ${m} дз.`,sumMinBad:(m,mx)=>`Патрэбна хоць адна частка ад ${m} дз. (зараз самая доўгая ${mx})`,
+  sumOverlap:'Часткі адпачынку перасякаюцца',sumOut:r=>`Ёсць дні па-за планам (${r})`,
+  sumPer:(l,m)=>`Месячныя ў адпачынку: ${l} дз.${m?' (+'+m+' магчыма)':''}`,sumPerNone:'Месячныя на адпачынак не трапляюць',
+  sumAvoid:x=>'Непажаданыя даты ў адпачынку: '+x,sumEmpty:'Дадайце часткі адпачынку',
+  monthAny:'месяц: любы',issPer:'месячныя: ',issMaybe:'магчыма: ',issAvoid:'непажадана: ',tagC:'перанос',tagY:'новы год',
+  showCal:'Паказаць на календары',partMeta:(d,ext,s)=>`${d} дз.${ext?' + '+ext+' свят.':''} · адпачынак запар ${s}`,
+  del:'Выдаліць частку',month:'Месяц',fit:'Падабраць',clean:'✓ без перасячэнняў',noParts:'Пакуль няма частак.',
+  zoomOut:'Агляд года',zoomIn:'Буйна',errPeriod:'перыяд',errLine:l=>'радок «'+l+'»',errTransfers:'пераносы: ',errHol:'святы: ',errDates:'даты: ',errPrefix:'Не зразумеў: ',
+  pinMin:'PIN — мінімум 4 сімвалы',encrypting:'Шыфрую…',copiedView:'Спасылка для прагляду скапіявана ✓',copyBelow:'Скапіюйце спасылку ніжэй',encErr:'Памылка шыфравання',
+  checking:'Правяраю…',badPin:'Няправільны PIN або пашкоджаная спасылка',ver:(e,b)=>(e?'рэдактар':'прагляд')+' · версія '+b,
+  noCrypto:'Браўзер не падтрымлівае шыфраванне. Адкрыйце ў Safari або Chrome.',
+  selMeta:(tag,s,l,a)=>`${tag} · адпачынак запар ${s}${l?' · месячныя '+l+' дз.':''}${a?' · непаж. '+a:''}`,
+  unsel:'Зняць выбар',m7:'На тыдзень раней',prev:'На дзень раней',next1:'На дзень пазней',p7:'На тыдзень пазней',minus:'На дзень карацей',plus:'На дзень даўжэй',
+  fitTitle:'Лепшае месца ў гэтым месяцы',editMove:'Змяніць / рухаць',hint:'Або націсніце на дзень у календары — адпачынак пачнецца з яго',
+  overlap:'Перасякаецца з іншай часткай',outside:'Па-за перыядам плана',addChip:'+ частка',dd:'дз.',
+  ideasHead:(R,has)=>`Не размеркавана ${R} дз.${has?' Ідэі каля святаў:':''}`,idea:(r,L,tot)=>`+ ${r}: ${L} дз. → ${tot} адпачынку`,
+  coachN:(i,n)=>`${i} з ${n}`,langAria:'Мова: беларуская / руская',
+  E:['Часткі адпачынку. Націсніце на частку, каб выбраць яе. «+ частка» — дадаць новую.',
+     'Выбраная частка абведзена рамкай. Націсніце на любы іншы дзень — адпачынак пачнецца з яго.',
+     '−7 ◀ ▶ +7 — зрух на тыдзень або на дзень. Глядзіце:',
+     'Даўжыня часткі і «Падабраць» — лепшае месца ў гэтым месяцы: больш выхадных і святаў запар, без непажаданых дат.',
+     'Ідэі на неразмеркаваныя дні: кароткія адпачынкі каля святаў. Націсніце — частка дадасца.',
+     'Сіні — адпачынак, чырвоная рыса — месячныя, жоўтая рамка — лепш не ў адпачынку, падкрэслена — свята (не марнуе дні адпачынку).',
+     'Укладка «Адпачынак»: колькі дзён засталося, правілы і перасячэнні.',
+     'Укладка «Спасылка»: «Захаваць» дасць спасылку для прагляду (адправіць) і для рэдагавання (сабе). PIN паведамляйце асобна.'],
+  V:['Сіні — адпачынак, чырвоная рыса — месячныя, жоўтая рамка — лепш не ў адпачынку, падкрэслена — свята.',
+     'Націсніце на адпачынак — знізу з’явяцца падрабязнасці: даты і колькі дзён адпачынку запар.',
+     '«Змяніць» уключае рэдактар: адпачынак можна рухаць. Праўкі застаюцца ў вас, пакуль вы не адправіце новую спасылку.',
+     'Укладка «Адпачынак»: вынікі і ўсе часткі спісам.']}};
+// Language: viewer's own choice on this device wins, then the language saved in the link, then the device language.
+let LANG_PREF=null;try{LANG_PREF=localStorage.getItem('plan.lang')}catch(_){}
+let LANG=LANG_PREF||(/^be\b/i.test(navigator.language||'')?'be':'ru');
+const t=(k,...a)=>{const v=I[LANG][k]!==undefined?I[LANG][k]:I.ru[k];return typeof v==='function'?v(...a):v};
+function applyStatic(){
+  document.documentElement.lang=LANG;document.title=t('title');
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
+  document.querySelectorAll('[data-th]').forEach(e=>e.innerHTML=t(e.dataset.th));
+  document.querySelectorAll('[data-ta]').forEach(e=>e.setAttribute('aria-label',t(e.dataset.ta)));
+  document.querySelectorAll('.lang').forEach(b=>{b.textContent=LANG==='be'?'Рус':'Бел';b.setAttribute('aria-label',t('langAria'))});
+  $('ver').textContent=t('ver',EDIT,BUILD);
+}
+
 /* ---------- dates: integer day numbers (UTC) ---------- */
+const WDN={пн:1,вт:2,аў:2,ср:3,чт:4,чц:4,пт:5,сб:6,вс:0,нд:0};
 const dn=(y,m,d)=>Math.round(Date.UTC(y,m-1,d)/DAY);
 const dt=n=>new Date(n*DAY);
 const iso=n=>dt(n).toISOString().slice(0,10);
 const fromIso=s=>{const [y,m,d]=s.split('-').map(Number);return dn(y,m,d)};
-const nice=n=>{const t=dt(n);return t.getUTCDate()+' '+MON_G[t.getUTCMonth()]};
+const nice=n=>{const x=dt(n);return x.getUTCDate()+' '+t('monG')[x.getUTCMonth()]};
 const niceY=n=>nice(n)+' '+dt(n).getUTCFullYear();
 const range=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r};
 
@@ -257,7 +372,7 @@ function parseSpecs(str,years){
   const out=new Set(),bad=new Set();
   for(const year of [].concat(years))for(const raw of (str||'').split(/[,;\s]+/).filter(Boolean)){
     let m;
-    if((m=raw.match(/^(пн|вт|ср|чт|пт|сб|вс)(\d)\.(\d{1,2})$/i))){
+    if((m=raw.match(/^(пн|вт|аў|ср|чт|чц|пт|сб|вс|нд)(\d)\.(\d{1,2})$/i))){
       const wd=WDN[m[1].toLowerCase()],k=+m[2],mo=+m[3];let d=dn(year,mo,1),c=0;
       while(dt(d).getUTCMonth()===mo-1){if(dt(d).getUTCDay()===wd&&++c===k){out.add(d);break}d++}
     }else if((m=raw.match(/^(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?(?:-(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?)?$/))){
@@ -292,10 +407,10 @@ async function open_(hash,pin){
 /* ---------- state ---------- */
 let S=null,PIN='',dirty=false,M=null,SEL=null,CUR='cal',BIG=EDIT;
 try{const z=localStorage.getItem('plan.big');if(z!==null)BIG=z==='1'}catch(_){}
-function blank(){const t=new Date(),y=t.getFullYear(),m=t.getMonth()+2;return {r:[m>12?`${y+1}-01`:`${y}-${String(m).padStart(2,'0')}`,`${y+1}-12`],c:[],f:0,v:{carry:0,split:1,year:24,min:14},p:[],h:'',a:''}}
+function blank(){const d=new Date(),y=d.getFullYear(),m=d.getMonth()+2;return {r:[m>12?`${y+1}-01`:`${y}-${String(m).padStart(2,'0')}`,`${y+1}-12`],c:[],f:0,v:{carry:0,split:1,year:24,min:14},p:[],h:'',a:'',l:LANG}}
 const ym=s=>s.split('-').map(Number);
 function rng(){const [fy,fm]=ym(S.r[0]),[ty,tm]=ym(S.r[1]);return {fy,fm,ty,tm,a:dn(fy,fm,1),b:dn(ty,tm+1,1)-1,years:range(fy,ty)}}
-const rngTxt=()=>{const r=rng();return `${MON_G[r.fm-1]} ${r.fy} – ${MON_G[r.tm-1]} ${r.ty}`};
+const rngTxt=()=>{const r=rng(),g=t('monG');return `${g[r.fm-1]} ${r.fy} – ${g[r.tm-1]} ${r.ty}`};
 
 /* ---------- model ---------- */
 function model(){
@@ -303,7 +418,6 @@ function model(){
   const hol=parseSpecs(S.h,r.years).days, av=parseSpecs(S.a,r.years).days;
   const exOff=parseSpecs(S.w||'',r.years).days, exWork=parseSpecs(S.ws||'',r.years).days;
   const off=d=>hol.has(d)||exOff.has(d)||(!exWork.has(d)&&[0,6].includes(dt(d).getUTCDay()));
-  // cycles
   const cyc=S.c.map(s=>{const [d,l]=s.split(':');return {s:fromIso(d),l:+l||5}}).sort((a,b)=>a.s-b.s);
   const lens=[];for(let i=1;i<cyc.length;i++)lens.push(cyc[i].s-cyc[i-1].s);
   const rec=lens.slice(-6),avgL=rec.length?rec.reduce((a,b)=>a+b,0)/rec.length:null;
@@ -327,7 +441,7 @@ function span(p){ // calendar days; holidays are not counted and extend the part
 function hits(days){
   let l=0,m=0;const a=[];
   for(const d of days){if(M.likely.has(d))l++;else if(M.maybe.has(d))m++;if(M.av.has(d))a.push(d)}
-  return {l,m,a,score:l*3+m+a.length*4};
+  return {l,m,a};
 }
 function streak(ds){let L=ds[0]-1,R=ds[ds.length-1]+1;while(M.off(L))L--;while(M.off(R))R++;return {total:R-L-1,before:ds[0]-L-1,after:R-ds[ds.length-1]-1}}
 const lexLess=(k,b)=>{for(let j=0;j<k.length;j++)if(k[j]!==b[j])return k[j]<b[j];return false};
@@ -346,29 +460,37 @@ function fit(i){
   if(best)p[0]=iso(best.s);return !!best;
 }
 function others(i){const s=new Set();S.p.forEach((p,j)=>{if(j!==i)span(p).forEach(d=>s.add(d))});return s}
-function alts(i){
-  const p=S.p[i],cur=hits(span(p)).score,busy=others(i),res=[];
-  if(cur===0)return res;
-  for(let off=-30;off<=30;off++){if(!off)continue;
-    const s=fromIso(p[0])+off,q=[iso(s),p[1],p[2]],ds=span(q);
-    if(ds[0]<M.yA||ds[ds.length-1]>M.yB||ds.some(d=>busy.has(d)))continue;
-    const h=hits(ds);if(h.score<cur)res.push({off,s,h});}
-  res.sort((a,b)=>a.h.score-b.h.score||Math.abs(a.off)-Math.abs(b.off));
-  const pick=[];for(const r of res){if(pick.every(x=>Math.abs(x.off-r.off)>3))pick.push(r);if(pick.length===3)break}
-  return pick;
+// Ideas for the year days not yet placed: blocks that start and end on working days, contain no avoid dates,
+// touch a weekday public day off, give >= 2 days off per vacation day; per cluster keep the biggest gain.
+function ideas(){
+  const R=S.v.year-S.p.filter(p=>p[2]==='y').reduce((a,p)=>a+p[1],0);if(R<=0)return {R,list:[]};
+  const busy=new Set();S.p.forEach(p=>span(p).forEach(d=>busy.add(d)));
+  const a=Math.max(M.yA,dn(M.y,1,1)),b=Math.min(M.yB,dn(M.y,12,31)),wk=d=>[0,6].includes(dt(d).getUTCDay()),best=new Map();
+  for(let s=a;s<=b;s++){if(M.off(s))continue;
+    for(let L=1;L<=Math.min(R,10);L++){
+      const ds=span([iso(s),L,'y']),e=ds[ds.length-1];if(e>b)break;
+      if(ds.some(d=>busy.has(d)||M.av.has(d)))break;
+      if(M.off(e))continue;
+      const sk=streak(ds),w0=ds[0]-sk.before,w1=e+sk.after;if(busy.has(w0-1)||busy.has(w1+1))continue;
+      let key=null;for(let d=w0;d<=w1;d++)if(!wk(d)&&M.off(d)){key=d;break}
+      if(key===null||sk.total/L<2)continue;
+      const c={s,L,w0,w1,total:sk.total,gain:sk.total-L,ratio:sk.total/L,per:hits(ds).l},o=best.get(key);
+      if(!o||lexLess([-c.gain,-c.ratio,c.per],[-o.gain,-o.ratio,o.per]))best.set(key,c);
+    }}
+  const out=[];for(const c of [...best.values()].sort((x,z)=>x.w0-z.w0)){const pr=out[out.length-1];if(pr&&c.w0<=pr.w1){if(c.gain>pr.gain)out[out.length-1]=c;continue}out.push(c)}
+  return {R,list:out};
 }
 
 /* ---------- render ---------- */
 function render(){
   M=model();
-  $('title').textContent='План отпуска';
   $('calTitle').textContent=rngTxt();
-  const f=M.avgL?`Цикл ≈ ${+M.avgL.toFixed(1)} дн.${M.sdL>0.05?' (±'+M.sdL.toFixed(1).replace('.',',')+')':''}, месячные ≈ ${M.avgP} дн., запас ±${S.f}.${M.starts.length?' Ближайшие: '+M.starts.slice(0,2).map(niceY).join(', '):''}`.replace(/(\d)\.(\d)/g,'$1,$2'):'Нет дат месячных — прогноза нет. Добавьте даты в «Данные».';
-  $('forecast').textContent=f;
+  const nx=M.starts.slice(0,2).map(niceY).join(', ');
+  $('forecast').textContent=M.avgL?t('forecast',+M.avgL.toFixed(1),M.sdL>0.05?' (±'+M.sdL.toFixed(1)+')':'',M.avgP,S.f,nx).replace(/(\d)\.(\d)/g,'$1,$2'):t('noCycles');
   if(SEL!==null&&!S.p[SEL])SEL=null;
   renderSummary();renderParts();renderCal();fillEditor();selbar();if(EDIT){renderChips();renderIdeas()}
   dot();
-  if(dirty)$('saveMsg').textContent='Есть изменения — сохраните в новую ссылку';
+  if(dirty)$('saveMsg').textContent=t('dirtyMsg');
 }
 function st(kind,txt){return `<div class="st ${kind}"><i>${kind==='ok'?'✓':kind==='warn'?'!':kind==='info'?'●':'×'}</i><span>${txt}</span></div>`}
 function runs(days,set){const out=[];let s=null,p=null;for(const d of days){if(set.has(d)){if(s===null)s=d;p=d}else if(s!==null){out.push([s,p]);s=null}}if(s!==null)out.push([s,p]);
@@ -379,65 +501,59 @@ function renderSummary(){
   let h='';
   if(v.carry>0){
     const okSplit=v.split||(pc.length<=1);
-    const k=sc===v.carry&&okSplit?'ok':sc>v.carry||!okSplit?'bad':'warn';
-    h+=st(k,`Перенос: ${sc} из ${v.carry} дн.${!v.split?' — одним куском':''}${!okSplit?' (разбит, так нельзя)':''}${sc<v.carry?' — осталось '+(v.carry-sc):''}`);
+    h+=st(sc===v.carry&&okSplit?'ok':sc>v.carry||!okSplit?'bad':'warn',t('sumCarry',sc,v.carry,!v.split,!okSplit,sc<v.carry?v.carry-sc:0));
   }
   if(v.year>0){
-    const k=sy>v.year?'bad':sy===v.year?'ok':'warn';
-    h+=st(k,`Новый год (${M.y}): ${sy} из ${v.year} дн.${sy<v.year?' — осталось '+(v.year-sy):''}${sy>v.year?' — перебор '+(sy-v.year):''}`);
-    if(v.min>0&&py.length){const mx=Math.max(...py.map(p=>p[1]));h+=st(mx>=v.min?'ok':'bad',mx>=v.min?`Есть часть не короче ${v.min} дн.`:`Нужна хотя бы одна часть от ${v.min} дн. (сейчас самая длинная ${mx})`)}
+    h+=st(sy>v.year?'bad':sy===v.year?'ok':'warn',t('sumYear',M.y,sy,v.year,sy<v.year?v.year-sy:0,sy>v.year?sy-v.year:0));
+    if(v.min>0&&py.length){const mx=Math.max(...py.map(p=>p[1]));h+=st(mx>=v.min?'ok':'bad',mx>=v.min?t('sumMinOk',v.min):t('sumMinBad',v.min,mx))}
   }
   const all=[];S.p.forEach(p=>all.push(...span(p)));
-  if(new Set(all).size<all.length)h+=st('bad','Части отпуска пересекаются');
-  const out=all.some(d=>d<M.yA||d>M.yB);if(out)h+=st('warn',`Есть дни вне плана (${rngTxt()})`);
-  const t=hits([...new Set(all)]);
-  if(S.p.length)h+=st(t.l||t.m?'info':'ok',t.l||t.m?`Месячные в отпуске: ${t.l} дн.${t.m?' (+'+t.m+' возможно)':''}`:'Месячные на отпуск не попадают');
-  if(S.p.length&&t.a.length)h+=st('warn','Нежелательные даты в отпуске: '+t.a.map(nice).join(', '));
-  $('summary').innerHTML=h||st('warn','Добавьте части отпуска');
+  if(new Set(all).size<all.length)h+=st('bad',t('sumOverlap'));
+  if(all.some(d=>d<M.yA||d>M.yB))h+=st('warn',t('sumOut',rngTxt()));
+  const x=hits([...new Set(all)]);
+  if(S.p.length)h+=st(x.l||x.m?'info':'ok',x.l||x.m?t('sumPer',x.l,x.m):t('sumPerNone'));
+  if(S.p.length&&x.a.length)h+=st('warn',t('sumAvoid',x.a.map(nice).join(', ')));
+  $('summary').innerHTML=h||st('warn',t('sumEmpty'));
 }
-function monthOpts(sel){const r=rng();let o=`<option value="">месяц: любой</option>`;
-  for(let k=0,yy=r.fy,m=r.fm;k<36&&(yy<r.ty||(yy===r.ty&&m<=r.tm));k++,m=m===12?(yy++,1):m+1){const v=`${yy}-${String(m).padStart(2,'0')}`;o+=`<option value="${v}" ${v===sel?'selected':''}>${MONTHS[m-1]} ${yy}</option>`}
-  return o}
+function forMonths(cb){const r=rng();for(let k=0,yy=r.fy,m=r.fm;k<36&&(yy<r.ty||(yy===r.ty&&m<=r.tm));k++,m=m===12?(yy++,1):m+1)cb(yy,m,k)}
+function monthOpts(sel){let o=`<option value="">${t('monthAny')}</option>`;
+  forMonths((yy,m)=>{const v=`${yy}-${String(m).padStart(2,'0')}`;o+=`<option value="${v}" ${v===sel?'selected':''}>${t('months')[m-1]} ${yy}</option>`});return o}
 function renderParts(){
-  const box=$('parts');
-  box.innerHTML=S.p.map((p,i)=>{
-    const ds=span(p),h=hits(ds),ext=ds.length-p[1];
-    const lock=p[2]==='c'&&!S.v.split,sk=streak(ds);
-    let iss=[];
-    if(h.l)iss.push(`месячные: ${runs(ds,M.likely)}`);
-    if(h.m)iss.push(`возможно: ${runs(ds,M.maybe)}`);
-    if(h.a.length)iss.push(`нежелательно: ${h.a.map(nice).join(', ')}`);
+  $('parts').innerHTML=S.p.map((p,i)=>{
+    const ds=span(p),h=hits(ds),ext=ds.length-p[1],sk=streak(ds),iss=[];
+    if(h.l)iss.push(t('issPer')+runs(ds,M.likely));
+    if(h.m)iss.push(t('issMaybe')+runs(ds,M.maybe));
+    if(h.a.length)iss.push(t('issAvoid')+h.a.map(nice).join(', '));
     const strip=ds.map(d=>`<i class="${M.likely.has(d)?'p':M.maybe.has(d)?'ps':''}${M.av.has(d)?' a':''}${M.hol.has(d)?' h':''}"></i>`).join('');
     return `<div class="card part" data-i="${i}">
-      <div class="top"><span class="tag">${p[2]==='c'?'перенос':'новый год'}</span>
-        <button type="button" class="rng" data-act="show" title="Показать на календаре">${nice(ds[0])} – ${nice(ds[ds.length-1])}</button>
-        <span style="font-size:13px;color:var(--muted)">${p[1]} дн.${ext?' + '+ext+' празд.':''} · отдых подряд ${sk.total}</span>
-        <button class="sm icon x edit-only" data-act="del" aria-label="Удалить часть">×</button></div>
+      <div class="top"><span class="tag">${t(p[2]==='c'?'tagC':'tagY')}</span>
+        <button type="button" class="rng" data-act="show" title="${t('showCal')}">${nice(ds[0])} – ${nice(ds[ds.length-1])}</button>
+        <span style="font-size:13px;color:var(--muted)">${t('partMeta',p[1],ext,sk.total)}</span>
+        <button class="sm icon x edit-only" data-act="del" aria-label="${t('del')}">×</button></div>
       <div class="row prow edit-only" style="margin-top:6px">
-        <select data-act="month" aria-label="Месяц">${monthOpts(p[3])}</select>
-        <button class="sm" data-act="fit" ${p[3]?'':'disabled'}>Подобрать</button></div>
+        <select data-act="month" aria-label="${t('month')}">${monthOpts(p[3])}</select>
+        <button class="sm" data-act="fit" ${p[3]?'':'disabled'}>${t('fit')}</button></div>
       <div class="strip" aria-hidden="true">${strip}</div>
-      <div class="issues">${iss.length?iss.join(' · '):'<span class="good">✓ без пересечений</span>'}</div>
-    </div>`}).join('')||'<p class="hint">Пока нет частей.</p>';
+      <div class="issues">${iss.length?iss.join(' · '):`<span class="good">${t('clean')}</span>`}</div>
+    </div>`}).join('')||`<p class="hint">${t('noParts')}</p>`;
 }
 function renderCal(){
   const vac=new Set();S.p.forEach(p=>span(p).forEach(d=>vac.add(d)));
-  const selD=new Set(SEL!==null&&S.p[SEL]?span(S.p[SEL]):[]);
+  const selD=new Set(SEL!==null&&S.p[SEL]?span(S.p[SEL]):[]),W=t('wds'),MN=t('months');
   let h='';
-  const r=rng();
-  for(let k=0,yy=r.fy,m=r.fm;k<36&&(yy<r.ty||(yy===r.ty&&m<=r.tm));k++,m=m===12?(yy++,1):m+1){
+  forMonths((yy,m,k)=>{
     const a=dn(yy,m,1),off=(dt(a).getUTCDay()+6)%7;let c='';
-    ['пн','вт','ср','чт','пт','сб','вс'].forEach(w=>c+=`<div class="wd">${w}</div>`);
+    W.forEach(w=>c+=`<div class="wd">${w}</div>`);
     for(let i=0;i<off;i++)c+='<div></div>';
     for(let d=a;dt(d).getUTCMonth()===m-1;d++){
-      const wd=dt(d).getUTCDay(),cls=['d'];
+      const cls=['d'];
       if(M.off(d)&&!M.hol.has(d))cls.push('we');if(vac.has(d))cls.push('v');if(selD.has(d))cls.push('sel');if(M.av.has(d))cls.push('a');if(M.hol.has(d))cls.push('h');
       const bar=M.likely.has(d)?'<i class="pb"></i>':M.maybe.has(d)?'<i class="pb s"></i>':'';
       c+=`<div class="${cls.join(' ')}" data-d="${d}">${dt(d).getUTCDate()}${bar}</div>`;
     }
-    h+=`<div id="m-${yy}-${String(m).padStart(2,'0')}"><div class="mname">${MONTHS[m-1]}${m===1||k===0||BIG?' '+yy:''}</div><div class="cal">${c}</div></div>`;
-  }
-  $('months').innerHTML=h;$('months').classList.toggle('big',BIG);$('zoom').textContent=BIG?'Обзор года':'Крупно';
+    h+=`<div id="m-${yy}-${String(m).padStart(2,'0')}"><div class="mname">${MN[m-1]}${m===1||k===0||BIG?' '+yy:''}</div><div class="cal">${c}</div></div>`;
+  });
+  $('months').innerHTML=h;$('months').classList.toggle('big',BIG);$('zoom').textContent=t(BIG?'zoomOut':'zoomIn');
 }
 function fillEditor(){
   if($('editor').contains(document.activeElement))return;
@@ -445,154 +561,51 @@ function fillEditor(){
   $('eCycles').value=S.c.map(s=>{const [d,l]=s.split(':');const [y,m,dd]=d.split('-');return `${dd}.${m}.${y} ${l}`}).join('\n');
   $('eHol').value=S.h;$('eAv').value=S.a;$('eW').value=S.w||'';$('eWs').value=S.ws||'';
 }
-
-/* ---------- events ---------- */
-function change(fn){fn();dirty=true;$('links').classList.add('hidden');render()}
-$('parts').addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;const i=+b.closest('.part').dataset.i,act=b.dataset.act;
-  if(act==='show'){focusPart(i);return}
-  if(act==='del')change(()=>{S.p.splice(i,1);SEL=null});
-  if(act==='prev'||act==='next')change(()=>{S.p[i][0]=iso(fromIso(S.p[i][0])+(act==='next'?1:-1))});
-  if(act==='go')change(()=>{S.p[i][0]=b.dataset.s});
-  if(act==='fit')change(()=>{fit(i)});
-});
-$('parts').addEventListener('change',e=>{
-  const t=e.target,i=+t.closest('.part').dataset.i;
-  if(t.dataset.act==='date'&&t.value)change(()=>{S.p[i][0]=t.value});
-  if(t.dataset.act==='days'&&+t.value>0)change(()=>{S.p[i][1]=Math.round(+t.value)});
-  if(t.dataset.act==='month')change(()=>{S.p[i][3]=t.value||undefined;if(t.value)fit(i)});
-});
-function addPart(src){
-  change(()=>{
-    const used=new Set();S.p.forEach(p=>span(p).forEach(d=>used.add(d)));
-    const sc=S.p.filter(p=>p[2]==='c').reduce((a,p)=>a+p[1],0),sy=S.p.filter(p=>p[2]==='y').reduce((a,p)=>a+p[1],0);
-    let n=src==='c'?Math.max(1,S.v.carry-sc):Math.max(1,Math.min(14,S.v.year-sy));
-    let s=Math.max(M.yA,dn(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate())+7);while(range(s,s+n+5).some(d=>used.has(d))&&s<M.yB)s+=7;
-    S.p.push([iso(s),n,src]);S.p.sort((a,b)=>a[0]<b[0]?-1:1);
-  });
+const shortRng=p=>{const ds=span(p),a=dt(ds[0]),b=dt(ds[ds.length-1]);return (a.getUTCMonth()===b.getUTCMonth()?a.getUTCDate():nice(ds[0]))+'–'+nice(ds[ds.length-1])};
+function renderChips(){
+  $('chips').innerHTML=S.p.map((p,i)=>`<button type="button" data-i="${i}" class="${i===SEL?'on':''}" aria-pressed="${i===SEL}">${shortRng(p)} · ${p[1]}</button>`).join('')+
+    `<button type="button" data-add="y">${t('addChip')}</button>`;
 }
-$('fitAll').onclick=()=>change(()=>{const order=S.p.map((p,i)=>i).sort((a,b)=>S.p[b][1]-S.p[a][1]);order.forEach(i=>fit(i))});
-$('addC').onclick=()=>addPart('c');$('addY').onclick=()=>addPart('y');
-$('apply').onclick=()=>{
-  const r0=$('eFrom').value,r1=$('eTo').value,err=[];
-  if(!/^\d{4}-\d{2}$/.test(r0)||!/^\d{4}-\d{2}$/.test(r1)||r1<r0)err.push('период');
-  const yrs=err.length?[2000]:range(ym(r0)[0],ym(r1)[0]);
-  const cyc=[];
-  $('eCycles').value.split('\n').map(s=>s.trim()).filter(Boolean).forEach(line=>{
-    const m=line.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2})$/)||line.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2})$/);
-    if(!m){err.push('строка «'+line+'»');return}
-    const d=m[1].length===4?dn(+m[1],+m[2],+m[3]):dn(+m[3],+m[2],+m[1]);cyc.push(iso(d)+':'+(+m[4]));
-  });
-  const bh=parseSpecs($('eHol').value,yrs).bad,ba=parseSpecs($('eAv').value,yrs).bad,bw=[...parseSpecs($('eW').value,yrs).bad,...parseSpecs($('eWs').value,yrs).bad];
-  if(bw.length)err.push('переносы: '+bw.join(' '));
-  if(bh.length)err.push('праздники: '+bh.join(' '));if(ba.length)err.push('даты: '+ba.join(' '));
-  $('edErr').textContent=err.length?'Не понял: '+err.join('; '):'';
-  if(err.length)return;
-  change(()=>{S.r=[r0,r1];S.f=Math.max(0,Math.min(10,+$('eFr').value||0));
-    S.v={carry:Math.max(0,+$('eCarry').value||0),split:$('eSplit').checked?1:0,year:Math.max(0,+$('eYearDays').value||0),min:Math.max(0,+$('eMin').value||0)};
-    S.c=cyc.sort();S.h=$('eHol').value.trim();S.a=$('eAv').value.trim();S.w=$('eW').value.trim();S.ws=$('eWs').value.trim();});
-  document.activeElement.blur();fillEditor();
-};
-$('save').onclick=async()=>{
-  const pin=$('pinSave').value.trim();
-  if(pin.length<4){$('saveMsg').textContent='PIN — минимум 4 символа';$('pinSave').focus();return}
-  $('save').disabled=true;$('saveMsg').textContent='Шифрую…';
-  try{
-    const h=await seal(S,pin);PIN=pin;history.replaceState(null,'','?edit&v='+BUILD+'#'+h);
-    const base=location.origin+location.pathname;
-    // ?v= changes with each page version so browsers and Telegram do not reuse a cached old page
-    $('linkOut').value=base+'?v='+BUILD+'#'+h;$('linkEdit').value=base+'?edit&v='+BUILD+'#'+h;$('links').classList.remove('hidden');
-    const copied=await copy('linkOut');
-    dirty=false;dot();$('saveMsg').textContent=copied?'Ссылка для просмотра скопирована ✓':'Скопируйте ссылку ниже';
-  }catch(e){$('saveMsg').textContent='Ошибка шифрования'}
-  $('save').disabled=false;
-};
-async function copy(id){const el=$(id);try{await navigator.clipboard.writeText(el.value);return true}catch(_){el.focus();el.select();return false}}
-$('links').addEventListener('click',async e=>{const b=e.target.closest('[data-copy]');if(!b)return;const ok=await copy(b.dataset.copy);b.textContent=ok?'Скопировано ✓':'Выделено';setTimeout(()=>b.textContent='Копировать',1500)});
-$('lockForm').onsubmit=async e=>{
-  e.preventDefault();const pin=$('pinIn').value.trim();if(!pin)return;
-  $('lockBtn').disabled=true;$('lockErr').textContent='Проверяю…';
-  try{S=await open_(location.hash.slice(1),pin);PIN=pin;$('pinSave').value=pin;show()}
-  catch(_){$('lockErr').textContent='Неверный PIN или битая ссылка';$('pinIn').select()}
-  $('lockBtn').disabled=false;
-};
-$('newLink').onclick=e=>{e.preventDefault();history.replaceState(null,'',location.pathname+'?edit');S=blank();dirty=true;show('data')};
-addEventListener('hashchange',()=>location.reload());
+function renderIdeas(){
+  const {R,list}=ideas(),box=$('ideas');
+  if(R<=0){box.innerHTML='';return}
+  box.innerHTML=t('ideasHead',R,list.length>0)+`<div class="row">${list.map(c=>`<button type="button" data-s="${iso(c.s)}" data-l="${c.L}">${t('idea',shortRng([iso(c.s),c.L]),c.L,c.total)}</button>`).join('')}</div>`;
+}
+function dot(){const b=$('tabs').querySelector('[data-tab=link]');if(b)b.classList.toggle('dot',dirty)}
+
+/* ---------- tabs ---------- */
 const IC={cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   parts:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
   data:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'};
 function buildTabs(){
-  const T=EDIT?[['cal','Календарь'],['parts','Отпуск'],['data','Данные'],['link','Ссылка']]:[['cal','Календарь'],['parts','Отпуск']];
-  $('tabs').innerHTML=T.map(([k,t])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${t}</span></button>`).join('');
+  const T=EDIT?[['cal','tabCal'],['parts','tabParts'],['data','tabData'],['link','tabLink']]:[['cal','tabCal'],['parts','tabParts']];
+  $('tabs').innerHTML=T.map(([k,l])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${k===CUR}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${t(l)}</span></button>`).join('');
+  dot();
 }
-buildTabs();
-// view -> edit in place: same data, PIN already known, keeps the selected part
-function enterEdit(){
-  EDIT=true;document.body.classList.remove('view');history.replaceState(null,'','?edit&v='+BUILD+location.hash);
-  $('pinSave').value=PIN;buildTabs();BIG=true;try{const z=localStorage.getItem('plan.big');if(z!==null)BIG=z==='1'}catch(_){}
-  render();tab('cal');
-}
-$('toEdit').onclick=enterEdit;
-/* ---------- help: guided tour over the real UI ---------- */
-const firstSelCell=()=>{if(SEL===null&&S.p.length){SEL=0;renderCal();if(EDIT)renderChips();selbar()}return SEL!==null?document.querySelector(`[data-d="${span(S.p[SEL])[0]}"]`):null};
-const firstVacCell=()=>S.p.length?document.querySelector(`[data-d="${span(S.p[0])[0]}"]`):null;
-const STEPS_EDIT=[
-  {tab:'cal',el:()=>$('chips'),t:'Части отпуска. Нажмите на часть, чтобы выбрать её. «+ часть» — добавить новую.'},
-  {tab:'cal',el:firstSelCell,t:'Выбранная часть обведена рамкой. Нажмите на любой другой день — отпуск начнётся с него.'},
-  {tab:'cal',el:()=>{firstSelCell();return $('selbar').querySelector('.sa')},t:'−7 ◀ ▶ +7 — сдвиг на неделю или на день. Смотрите:',demo:true},
-  {tab:'cal',el:()=>$('selbar').querySelectorAll('.sa')[1],t:'Длина части и «Подобрать» — лучшее место в этом месяце: больше выходных и праздников подряд, без нежелательных дат.'},
-  {tab:'cal',el:()=>$('ideas').querySelector('button'),t:'Идеи на нераспределённые дни: короткие отпуска у праздников. Нажмите — часть добавится.'},
-  {tab:'cal',el:()=>document.querySelector('.legend'),t:'Синий — отпуск, красная черта — месячные, жёлтая рамка — лучше не в отпуске, подчёркнуто — праздник (не тратит дни отпуска).'},
-  {tab:'parts',el:()=>$('summary'),t:'Вкладка «Отпуск»: сколько дней осталось, правила и пересечения.'},
-  {tab:'link',el:()=>$('savebar'),t:'Вкладка «Ссылка»: «Сохранить» даст ссылку для просмотра (отправить) и для редактирования (себе). PIN сообщайте отдельно.'}];
-const STEPS_VIEW=[
-  {tab:'cal',el:()=>document.querySelector('.legend'),t:'Синий — отпуск, красная черта — месячные, жёлтая рамка — лучше не в отпуске, подчёркнуто — праздник.'},
-  {tab:'cal',el:firstVacCell,t:'Нажмите на отпуск — снизу появятся подробности: даты и сколько дней отдыха подряд.'},
-  {tab:'cal',el:()=>$('toEdit'),t:'«Изменить» включает редактор: отпуск можно двигать. Правки остаются у вас, пока вы не отправите новую ссылку.'},
-  {tab:'parts',el:()=>$('summary'),t:'Вкладка «Отпуск»: итоги и все части списком.'}];
-let CO=null;
-function coach(){const st=(EDIT?STEPS_EDIT:STEPS_VIEW);CO={st,i:-1,demo:null};$('coach').classList.remove('hidden');coachStep(1)}
-function coachEnd(){demoStop();CO=null;$('coach').classList.add('hidden');if(CUR!=='cal')tab('cal')}
-function coachStep(dir){
-  demoStop();let i=CO.i,el=null;
-  do{i+=dir;if(i<0||i>=CO.st.length)return coachEnd();const s=CO.st[i];if(CUR!==s.tab)tab(s.tab);el=s.el()}while(!el||!el.getClientRects().length);
-  CO.i=i;const s=CO.st[i];
-  if(getComputedStyle(el).position!=='fixed'&&!el.closest('.selbar,.tabs,.chips'))el.scrollIntoView({block:'center'});
-  setTimeout(()=>{const r=el.getBoundingClientRect(),sp=$('coach').querySelector('.spot'),tp=$('coach').querySelector('.tip'),pad=6;
-    Object.assign(sp.style,{top:r.top-pad+'px',left:r.left-pad+'px',width:r.width+2*pad+'px',height:r.height+2*pad+'px'});
-    $('coachN').textContent=`${i+1} из ${CO.st.length}`;$('coachT').textContent=s.t;$('coachNext').textContent=i===CO.st.length-1?'Готово':'Дальше';
-    if(r.top+r.height/2>innerHeight/2){tp.style.top='';tp.style.bottom=Math.max(12,innerHeight-r.top+pad+10)+'px'}else{tp.style.bottom='';tp.style.top=Math.min(innerHeight-180,r.bottom+pad+10)+'px'}
-    if(s.demo)demoRun();},30);
-}
-// demo: move the selected part a few days and back without touching saved state
-function demoRun(){const p=S.p[SEL];if(!p)return;const orig=p[0],seq=[1,2,3,2,1,0];let k=0;
-  CO.demo={orig,p,t:setInterval(()=>{p[0]=iso(fromIso(orig)+seq[k]);renderCal();selbar();if(++k>=seq.length)demoStop()},450)}}
-function demoStop(){if(!CO||!CO.demo)return;clearInterval(CO.demo.t);CO.demo.p[0]=CO.demo.orig;CO.demo=null;renderCal();selbar()}
-$('help').onclick=coach;$('coachNext').onclick=()=>coachStep(1);$('coachX').onclick=coachEnd;
-addEventListener('keydown',e=>{if(CO&&e.key==='Escape')coachEnd()});
-$('ver').textContent=(EDIT?'редактор':'просмотр')+' · версия '+BUILD;
 $('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)tab(b.dataset.tab)};
 function tab(k){document.querySelectorAll('[data-pane]').forEach(p=>p.classList.toggle('hidden',p.dataset.pane!==k));
-  $('tabs').querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));CUR=k;if(k==='cal'&&EDIT&&SEL===null&&S&&S.p.length){SEL=0;if(M){renderCal();renderChips()}}if(M)selbar();scrollTo(0,0);
+  $('tabs').querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));CUR=k;
+  if(k==='cal'&&EDIT&&SEL===null&&S&&S.p.length){SEL=0;if(M){renderCal();renderChips()}}
+  if(M)selbar();scrollTo(0,0);
   if(k==='cal'&&SEL!==null&&S.p[SEL]){const el=$('m-'+S.p[SEL][0].slice(0,7));if(el)el.scrollIntoView({block:'start'})}}
+
 /* ---------- calendar: select a part, tap a day to move it ---------- */
 function selbar(){
   const b=$('selbar'),p=SEL!==null&&S.p[SEL];
   if(!p||CUR!=='cal'){b.classList.add('hidden');document.body.classList.remove('hasSel');return}
   const ds=span(p),sk=streak(ds),h=hits(ds),lock=p[2]==='c'&&!S.v.split;
-  b.innerHTML=`<div class="si"><b>${nice(ds[0])} – ${nice(ds[ds.length-1])}</b> <span>${p[2]==='c'?'перенос':'новый год'} · отдых подряд ${sk.total}${h.l?' · месячные '+h.l+' дн.':''}${h.a.length?' · нежел. '+h.a.length:''}</span><button class="sx" data-s="close" aria-label="Снять выбор">✕</button></div>`+
-    (EDIT?`<div class="sa"><button data-s="m7" aria-label="На неделю раньше">−7</button><button data-s="prev" aria-label="На день раньше">◀</button><button data-s="next" aria-label="На день позже">▶</button><button data-s="p7" aria-label="На неделю позже">+7</button></div>
-      <div class="sa"><button data-s="minus" ${lock?'disabled':''} aria-label="На день короче">−</button><span class="sn">${p[1]} дн.</span><button data-s="plus" ${lock?'disabled':''} aria-label="На день длиннее">+</button><button data-s="fit" class="primary" title="Лучшее место в этом месяце">Подобрать</button></div>
-      <div class="sh" id="selHint">${HINT}</div>`:`<div class="sa"><button data-s="edit" class="primary" style="font-size:16px">Изменить / двигать</button></div>`);
+  b.innerHTML=`<div class="si"><b>${nice(ds[0])} – ${nice(ds[ds.length-1])}</b> <span>${t('selMeta',t(p[2]==='c'?'tagC':'tagY'),sk.total,h.l,h.a.length)}</span><button class="sx" data-s="close" aria-label="${t('unsel')}">✕</button></div>`+
+    (EDIT?`<div class="sa"><button data-s="m7" aria-label="${t('m7')}">−7</button><button data-s="prev" aria-label="${t('prev')}">◀</button><button data-s="next" aria-label="${t('next1')}">▶</button><button data-s="p7" aria-label="${t('p7')}">+7</button></div>
+      <div class="sa"><button data-s="minus" ${lock?'disabled':''} aria-label="${t('minus')}">−</button><span class="sn">${p[1]} ${t('dd')}</span><button data-s="plus" ${lock?'disabled':''} aria-label="${t('plus')}">+</button><button data-s="fit" class="primary" title="${t('fitTitle')}">${t('fit')}</button></div>
+      <div class="sh" id="selHint">${t('hint')}</div>`:`<div class="sa"><button data-s="edit" class="primary" style="font-size:16px">${t('editMove')}</button></div>`);
   b.classList.remove('hidden');document.body.classList.add('hasSel');
 }
-const HINT='Или нажмите на день в календаре — отпуск начнётся с него';
-function flash(t){const h=$('selHint');if(h){h.textContent=t;h.style.color='var(--bad)';setTimeout(()=>{if($('selHint')){$('selHint').textContent=HINT;$('selHint').style.color=''}},1800)}}
+function flash(m){const h=$('selHint');if(h){h.textContent=m;h.style.color='var(--bad)';setTimeout(()=>{const x=$('selHint');if(x){x.textContent=t('hint');x.style.color=''}},1800)}}
 function tryMove(i,s){
   const p=S.p[i],ds=span([iso(s),p[1],p[2]]),busy=others(i);
-  if(ds.some(d=>busy.has(d)))return flash('Пересекается с другой частью');
-  if(ds[0]<M.yA||ds[ds.length-1]>M.yB)return flash('Вне периода плана');
+  if(ds.some(d=>busy.has(d)))return flash(t('overlap'));
+  if(ds[0]<M.yA||ds[ds.length-1]>M.yB)return flash(t('outside'));
   change(()=>{p[0]=iso(s);if(p[3]&&p[0].slice(0,7)!==p[3])p[3]=p[0].slice(0,7)});
   keepVisible(s);
 }
@@ -601,6 +614,9 @@ function keepVisible(d){const c=document.querySelector(`[data-d="${d}"]`);if(!c)
   const r=c.getBoundingClientRect(),bottom=innerHeight-$('selbar').offsetHeight-80;
   if(r.top<70||r.bottom>bottom)scrollBy({top:r.top-Math.max(80,(bottom-r.height)/2),behavior:'smooth'})}
 function focusPart(i){SEL=i;renderCal();if(EDIT)renderChips();tab('cal')}
+
+/* ---------- events ---------- */
+function change(fn){fn();dirty=true;$('links').classList.add('hidden');render()}
 $('months').addEventListener('click',e=>{
   const c=e.target.closest('[data-d]');if(!c)return;const d=+c.dataset.d;
   const pi=S.p.findIndex(p=>span(p).includes(d));
@@ -619,45 +635,136 @@ $('selbar').addEventListener('click',e=>{
   if(a==='fit'){change(()=>{if(!p[3])p[3]=p[0].slice(0,7);fit(i)});keepVisible(fromIso(p[0]))}
 });
 $('zoom').onclick=()=>{BIG=!BIG;try{localStorage.setItem('plan.big',BIG?'1':'0')}catch(_){}renderCal()};
-function shortRng(p){const ds=span(p),a=dt(ds[0]),b=dt(ds[ds.length-1]);return (a.getUTCMonth()===b.getUTCMonth()?a.getUTCDate():nice(ds[0]))+'–'+nice(ds[ds.length-1])}
-function renderChips(){
-  $('chips').innerHTML=S.p.map((p,i)=>`<button type="button" data-i="${i}" class="${i===SEL?'on':''}" aria-pressed="${i===SEL}">${shortRng(p)} · ${p[1]}</button>`).join('')+
-    `<button type="button" data-add="y">+ часть</button>`;
-}
 $('chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.add){const before=new Set(S.p);addPart('y');const i=S.p.findIndex(p=>!before.has(p));if(i>=0)focusPart(i);return}
   focusPart(+b.dataset.i)});
-// Ideas for the year days not yet placed: blocks that start and end on working days, contain no avoid dates,
-// touch a weekday public day off, give >= 2 days off per vacation day; per cluster keep the biggest gain.
-function ideas(){
-  const R=S.v.year-S.p.filter(p=>p[2]==='y').reduce((a,p)=>a+p[1],0);if(R<=0)return {R,list:[]};
-  const busy=new Set();S.p.forEach(p=>span(p).forEach(d=>busy.add(d)));
-  const a=Math.max(M.yA,dn(M.y,1,1)),b=Math.min(M.yB,dn(M.y,12,31)),wk=d=>[0,6].includes(dt(d).getUTCDay()),best=new Map();
-  for(let s=a;s<=b;s++){if(M.off(s))continue;
-    for(let L=1;L<=Math.min(R,10);L++){
-      const ds=span([iso(s),L,'y']),e=ds[ds.length-1];if(e>b)break;
-      if(ds.some(d=>busy.has(d)||M.av.has(d)))break;
-      if(M.off(e))continue;
-      const sk=streak(ds),w0=ds[0]-sk.before,w1=e+sk.after;if(busy.has(w0-1)||busy.has(w1+1))continue;
-      let key=null;for(let d=w0;d<=w1;d++)if(!wk(d)&&M.off(d)){key=d;break}
-      if(key===null||sk.total/L<2)continue;
-      const c={s,L,w0,w1,total:sk.total,gain:sk.total-L,ratio:sk.total/L,per:hits(ds).l},o=best.get(key);
-      if(!o||lexLess([-c.gain,-c.ratio,c.per],[-o.gain,-o.ratio,o.per]))best.set(key,c);
-    }}
-  const out=[];for(const c of [...best.values()].sort((x,z)=>x.w0-z.w0)){const pr=out.at(-1);if(pr&&c.w0<=pr.w1){if(c.gain>pr.gain)out[out.length-1]=c;continue}out.push(c)}
-  return {R,list:out};
-}
-function renderIdeas(){
-  const {R,list}=ideas(),box=$('ideas');
-  if(R<=0){box.innerHTML='';return}
-  box.innerHTML=`Не распределено ${R} дн.${list.length?' Идеи у праздников:':''}<div class="row">${list.map(c=>`<button type="button" data-s="${iso(c.s)}" data-l="${c.L}">+ ${shortRng([iso(c.s),c.L])}: ${c.L} дн. → ${c.total} отдыха</button>`).join('')}</div>`;
-}
 $('ideas').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  const st=b.dataset.s;change(()=>{S.p.push([st,+b.dataset.l,'y',st.slice(0,7)]);S.p.sort((x,z)=>x[0]<z[0]?-1:1)});
-  focusPart(S.p.findIndex(p=>p[0]===st))});
-function dot(){const b=$('tabs').querySelector('[data-tab=link]');if(b)b.classList.toggle('dot',dirty)}
+  const s=b.dataset.s;change(()=>{S.p.push([s,+b.dataset.l,'y',s.slice(0,7)]);S.p.sort((x,z)=>x[0]<z[0]?-1:1)});
+  focusPart(S.p.findIndex(p=>p[0]===s))});
+$('parts').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const i=+b.closest('.part').dataset.i,act=b.dataset.act;
+  if(act==='show'){focusPart(i);return}
+  if(act==='del')change(()=>{S.p.splice(i,1);SEL=null});
+  if(act==='fit')change(()=>{fit(i)});
+});
+$('parts').addEventListener('change',e=>{
+  const x=e.target,i=+x.closest('.part').dataset.i;
+  if(x.dataset.act==='month')change(()=>{S.p[i][3]=x.value||undefined;if(x.value)fit(i)});
+});
+function addPart(src){
+  change(()=>{
+    const used=new Set();S.p.forEach(p=>span(p).forEach(d=>used.add(d)));
+    const sc=S.p.filter(p=>p[2]==='c').reduce((a,p)=>a+p[1],0),sy=S.p.filter(p=>p[2]==='y').reduce((a,p)=>a+p[1],0);
+    const n=src==='c'?Math.max(1,S.v.carry-sc):Math.max(1,Math.min(14,S.v.year-sy));
+    let s=Math.max(M.yA,dn(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate())+7);while(range(s,s+n+5).some(d=>used.has(d))&&s<M.yB)s+=7;
+    S.p.push([iso(s),n,src]);S.p.sort((a,b)=>a[0]<b[0]?-1:1);
+  });
+}
+$('fitAll').onclick=()=>change(()=>{S.p.map((p,i)=>i).sort((a,b)=>S.p[b][1]-S.p[a][1]).forEach(i=>fit(i))});
+$('addC').onclick=()=>addPart('c');$('addY').onclick=()=>addPart('y');
+$('apply').onclick=()=>{
+  const r0=$('eFrom').value,r1=$('eTo').value,err=[];
+  if(!/^\d{4}-\d{2}$/.test(r0)||!/^\d{4}-\d{2}$/.test(r1)||r1<r0)err.push(t('errPeriod'));
+  const yrs=err.length?[2000]:range(ym(r0)[0],ym(r1)[0]);
+  const cyc=[];
+  $('eCycles').value.split('\n').map(s=>s.trim()).filter(Boolean).forEach(line=>{
+    const m=line.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2})$/)||line.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2})$/);
+    if(!m){err.push(t('errLine',line));return}
+    const d=m[1].length===4?dn(+m[1],+m[2],+m[3]):dn(+m[3],+m[2],+m[1]);cyc.push(iso(d)+':'+(+m[4]));
+  });
+  const bh=parseSpecs($('eHol').value,yrs).bad,ba=parseSpecs($('eAv').value,yrs).bad,bw=[...parseSpecs($('eW').value,yrs).bad,...parseSpecs($('eWs').value,yrs).bad];
+  if(bw.length)err.push(t('errTransfers')+bw.join(' '));
+  if(bh.length)err.push(t('errHol')+bh.join(' '));if(ba.length)err.push(t('errDates')+ba.join(' '));
+  $('edErr').textContent=err.length?t('errPrefix')+err.join('; '):'';
+  if(err.length)return;
+  change(()=>{S.r=[r0,r1];S.f=Math.max(0,Math.min(10,+$('eFr').value||0));
+    S.v={carry:Math.max(0,+$('eCarry').value||0),split:$('eSplit').checked?1:0,year:Math.max(0,+$('eYearDays').value||0),min:Math.max(0,+$('eMin').value||0)};
+    S.c=cyc.sort();S.h=$('eHol').value.trim();S.a=$('eAv').value.trim();S.w=$('eW').value.trim();S.ws=$('eWs').value.trim();});
+  document.activeElement.blur();fillEditor();
+};
+$('save').onclick=async()=>{
+  const pin=$('pinSave').value.trim();
+  if(pin.length<4){$('saveMsg').textContent=t('pinMin');$('pinSave').focus();return}
+  $('save').disabled=true;$('saveMsg').textContent=t('encrypting');
+  try{
+    S.l=LANG;const h=await seal(S,pin);PIN=pin;history.replaceState(null,'','?edit&v='+BUILD+'#'+h);
+    const base=location.origin+location.pathname;
+    // ?v= changes with each page version so browsers and Telegram do not reuse a cached old page
+    $('linkOut').value=base+'?v='+BUILD+'#'+h;$('linkEdit').value=base+'?edit&v='+BUILD+'#'+h;$('links').classList.remove('hidden');
+    const copied=await copy('linkOut');
+    dirty=false;dot();$('saveMsg').textContent=t(copied?'copiedView':'copyBelow');
+  }catch(e){$('saveMsg').textContent=t('encErr')}
+  $('save').disabled=false;
+};
+async function copy(id){const el=$(id);try{await navigator.clipboard.writeText(el.value);return true}catch(_){el.focus();el.select();return false}}
+$('links').addEventListener('click',async e=>{const b=e.target.closest('[data-copy]');if(!b)return;const ok=await copy(b.dataset.copy);b.textContent=t(ok?'copied':'selected');setTimeout(()=>b.textContent=t('copy'),1500)});
+$('lockForm').onsubmit=async e=>{
+  e.preventDefault();const pin=$('pinIn').value.trim();if(!pin)return;
+  $('lockBtn').disabled=true;$('lockErr').textContent=t('checking');
+  try{S=await open_(location.hash.slice(1),pin);PIN=pin;$('pinSave').value=pin;
+    if(!LANG_PREF&&S.l&&I[S.l]&&S.l!==LANG){LANG=S.l;applyStatic();buildTabs()}
+    show()}
+  catch(_){$('lockErr').textContent=t('badPin');$('pinIn').select()}
+  $('lockBtn').disabled=false;
+};
+$('newLink').onclick=e=>{e.preventDefault();history.replaceState(null,'',location.pathname+'?edit');S=blank();dirty=true;show('data')};
+addEventListener('hashchange',()=>location.reload());
+// view -> edit in place: same data, PIN already known, keeps the selected part
+function enterEdit(){
+  EDIT=true;document.body.classList.remove('view');history.replaceState(null,'','?edit&v='+BUILD+location.hash);
+  $('pinSave').value=PIN;BIG=true;try{const z=localStorage.getItem('plan.big');if(z!==null)BIG=z==='1'}catch(_){}
+  applyStatic();buildTabs();render();tab('cal');
+}
+$('toEdit').onclick=enterEdit;
+// language switch: remembered on this device; in the editor it also goes into the next saved link
+document.querySelectorAll('.lang').forEach(b=>b.onclick=()=>{
+  LANG=LANG==='be'?'ru':'be';LANG_PREF=LANG;try{localStorage.setItem('plan.lang',LANG)}catch(_){}
+  if(S&&EDIT&&S.l!==LANG){S.l=LANG;dirty=true}
+  applyStatic();buildTabs();if(S&&M){render();tab(CUR)}
+});
+
+/* ---------- help: guided tour over the real UI ---------- */
+const firstSelCell=()=>{if(SEL===null&&S.p.length){SEL=0;renderCal();if(EDIT)renderChips();selbar()}return SEL!==null?document.querySelector(`[data-d="${span(S.p[SEL])[0]}"]`):null};
+const firstVacCell=()=>S.p.length?document.querySelector(`[data-d="${span(S.p[0])[0]}"]`):null;
+const STEPS_EDIT=[
+  {tab:'cal',el:()=>$('chips')},
+  {tab:'cal',el:firstSelCell},
+  {tab:'cal',el:()=>{firstSelCell();return $('selbar').querySelector('.sa')},demo:true},
+  {tab:'cal',el:()=>$('selbar').querySelectorAll('.sa')[1]},
+  {tab:'cal',el:()=>$('ideas').querySelector('button')},
+  {tab:'cal',el:()=>document.querySelector('.legend')},
+  {tab:'parts',el:()=>$('summary')},
+  {tab:'link',el:()=>$('savebar')}];
+const STEPS_VIEW=[
+  {tab:'cal',el:()=>document.querySelector('.legend')},
+  {tab:'cal',el:firstVacCell},
+  {tab:'cal',el:()=>$('toEdit')},
+  {tab:'parts',el:()=>$('summary')}];
+let CO=null;
+function coach(){CO={st:EDIT?STEPS_EDIT:STEPS_VIEW,txt:t(EDIT?'E':'V'),i:-1,demo:null};$('coach').classList.remove('hidden');coachStep(1)}
+function coachEnd(){demoStop();CO=null;$('coach').classList.add('hidden');if(CUR!=='cal')tab('cal')}
+function coachStep(dir){
+  demoStop();let i=CO.i,el=null;
+  do{i+=dir;if(i<0||i>=CO.st.length)return coachEnd();const s=CO.st[i];if(CUR!==s.tab)tab(s.tab);el=s.el()}while(!el||!el.getClientRects().length);
+  CO.i=i;const s=CO.st[i];
+  if(getComputedStyle(el).position!=='fixed'&&!el.closest('.selbar,.tabs,.chips'))el.scrollIntoView({block:'center'});
+  setTimeout(()=>{const r=el.getBoundingClientRect(),sp=$('coach').querySelector('.spot'),tp=$('coach').querySelector('.tip'),pad=6;
+    Object.assign(sp.style,{top:r.top-pad+'px',left:r.left-pad+'px',width:r.width+2*pad+'px',height:r.height+2*pad+'px'});
+    $('coachN').textContent=t('coachN',i+1,CO.st.length);$('coachT').textContent=CO.txt[i];$('coachNext').textContent=t(i===CO.st.length-1?'done':'next');
+    if(r.top+r.height/2>innerHeight/2){tp.style.top='';tp.style.bottom=Math.max(12,innerHeight-r.top+pad+10)+'px'}else{tp.style.bottom='';tp.style.top=Math.min(innerHeight-180,r.bottom+pad+10)+'px'}
+    if(s.demo)demoRun();},30);
+}
+// demo: move the selected part a few days and back without touching saved state
+function demoRun(){const p=S.p[SEL];if(!p)return;const orig=p[0],seq=[1,2,3,2,1,0];let k=0;
+  CO.demo={orig,p,t:setInterval(()=>{p[0]=iso(fromIso(orig)+seq[k]);renderCal();selbar();if(++k>=seq.length)demoStop()},450)}}
+function demoStop(){if(!CO||!CO.demo)return;clearInterval(CO.demo.t);CO.demo.p[0]=CO.demo.orig;CO.demo=null;renderCal();selbar()}
+$('help').onclick=coach;$('coachNext').onclick=()=>coachStep(1);$('coachX').onclick=coachEnd;
+addEventListener('keydown',e=>{if(CO&&e.key==='Escape')coachEnd()});
+
+/* ---------- start ---------- */
 function show(first){$('lock').classList.add('hidden');$('app').classList.remove('hidden');$('tabs').classList.remove('hidden');render();tab(first||'cal')}
-if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:24px">Браузер не поддерживает шифрование. Откройте в Safari или Chrome.</p>'}
+applyStatic();buildTabs();
+if(!window.crypto||!crypto.subtle){document.body.innerHTML=`<p style="padding:24px">${t('noCrypto')}</p>`}
 else if(location.hash.length>1){$('lock').classList.remove('hidden');setTimeout(()=>$('pinIn').focus(),50)}
 else if(EDIT){S=blank();dirty=true;show('data')}
 else $('empty').classList.remove('hidden');
